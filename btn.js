@@ -6,6 +6,8 @@
     const MODAL_ID = "ceriabet-menu-modal";
     const FRAME_ID = "ceriabet-menu-frame";
     const STYLE_ID = "ceriabet-menu-style";
+    const BACKLINK_URL = "https://www.ceriabetsbobet.com";
+    const BACKLINK_ID = "ceriabet-backlink";
 
     const MENU = [
         {
@@ -818,6 +820,20 @@
     }
 
 
+    function createBacklink() {
+        if (document.getElementById(BACKLINK_ID)) return;
+
+        const backlink = document.createElement("a");
+        backlink.id = BACKLINK_ID;
+        backlink.href = BACKLINK_URL;
+        backlink.textContent = "Ceriabet";
+        backlink.target = "_blank";
+        backlink.rel = "noopener noreferrer";
+
+        document.body.appendChild(backlink);
+    }
+
+
     /* =====================================================
        INIT
     ===================================================== */
@@ -827,6 +843,7 @@
         injectStyle();
 
         createModal();
+        createBacklink();
 
 
         let checker =
