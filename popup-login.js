@@ -8,7 +8,7 @@
   const CLOSE_ID = "ceriabet-loggedin-close-v3";
 
   const IMAGE_URL =
-    "https://www.image2url.com/r2/default/images/1786246942678-3fbcc4ce-98b7-47ee-b595-0df90efd4c15.png";
+    "https://www.image2url.com/r2/default/images/1786484925071-966ab93e-49fe-44ce-bd02-ef99bc807d7c.png";
 
   const ANNOUNCEMENT_PATH =
     "/mobile/messages/announcement";
