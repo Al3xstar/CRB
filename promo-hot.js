@@ -36,39 +36,48 @@
     style.textContent = `
         ${TARGETS} {
             position: relative !important;
-            overflow: hidden !important;
+            overflow: visible !important;
             isolation: isolate;
         }
 
+        /*
+         * KILAP HALUS DI DALAM BUTTON
+         * Dibuat tetap berada di area button dengan mask inset.
+         */
         ${TARGETS_BEFORE} {
             content: "";
             position: absolute;
-            top: -35%;
-            left: -34%;
+
+            top: 0;
+            left: -38%;
 
             width: 34%;
-            height: 170%;
+            height: 100%;
+
+            border-radius: inherit;
 
             background: linear-gradient(
                 100deg,
                 rgba(255,255,255,0) 0%,
                 rgba(255,255,255,.03) 24%,
-                rgba(255,255,255,.15) 43%,
-                rgba(255,255,255,.34) 50%,
-                rgba(255,240,200,.24) 56%,
-                rgba(255,255,255,.08) 68%,
+                rgba(255,255,255,.14) 43%,
+                rgba(255,255,255,.30) 50%,
+                rgba(255,240,200,.22) 56%,
+                rgba(255,255,255,.07) 68%,
                 rgba(255,255,255,0) 100%
             );
 
             transform:
                 translateX(0)
-                skewX(-18deg);
+                skewX(-16deg);
 
             pointer-events: none;
             z-index: 2;
 
+            clip-path: inset(0 round 12px);
+
             animation:
-                ceriabetPromoSoftShineRTL
+                ceriabetPromoSoftShineLTR
                 3.2s
                 ease-in-out
                 infinite;
@@ -78,11 +87,11 @@
                 opacity;
         }
 
-        @keyframes ceriabetPromoSoftShineRTL {
+        @keyframes ceriabetPromoSoftShineLTR {
             0% {
                 transform:
                     translateX(0)
-                    skewX(-18deg);
+                    skewX(-16deg);
                 opacity: 0;
             }
 
@@ -96,27 +105,31 @@
 
             55% {
                 transform:
-                    translateX(400%)
-                    skewX(-18deg);
+                    translateX(410%)
+                    skewX(-16deg);
                 opacity: 0;
             }
 
             100% {
                 transform:
-                    translateX(400%)
-                    skewX(-18deg);
+                    translateX(410%)
+                    skewX(-16deg);
                 opacity: 0;
             }
         }
 
+        /*
+         * ICON HOT DI LUAR POJOK KANAN ATAS
+         */
         ${TARGETS_AFTER} {
             content: "";
             position: absolute;
-            top: 2px;
-            right: 2px;
 
-            width: 26px;
-            height: 26px;
+            top: -16px;
+            right: -14px;
+
+            width: 28px;
+            height: 28px;
 
             background:
                 url("${HOT_ICON}")
@@ -124,7 +137,7 @@
                 center / contain;
 
             pointer-events: none;
-            z-index: 4;
+            z-index: 10;
         }
 
         .promotion-sidebar,
@@ -142,8 +155,11 @@
 
         @media (max-width: 768px) {
             ${TARGETS_AFTER} {
-                width: 24px;
-                height: 24px;
+                width: 26px;
+                height: 26px;
+
+                top: -14px;
+                right: -11px;
             }
 
             ${TARGETS_BEFORE} {
