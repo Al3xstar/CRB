@@ -1,11 +1,11 @@
 (() => {
   "use strict";
 
-  const STYLE_ID = "ceriabet-loggedin-popup-v2-style";
-  const POPUP_ID = "ceriabet-loggedin-popup-v2";
-  const OVERLAY_ID = "ceriabet-loggedin-overlay-v2";
-  const EXPLORE_ID = "ceriabet-loggedin-explore-v2";
-  const CLOSE_ID = "ceriabet-loggedin-close-v2";
+  const STYLE_ID = "ceriabet-loggedin-popup-v3-style";
+  const POPUP_ID = "ceriabet-loggedin-popup-v3";
+  const OVERLAY_ID = "ceriabet-loggedin-overlay-v3";
+  const EXPLORE_ID = "ceriabet-loggedin-explore-v3";
+  const CLOSE_ID = "ceriabet-loggedin-close-v3";
 
   const IMAGE_URL =
     "https://www.image2url.com/r2/default/images/1786246942678-3fbcc4ce-98b7-47ee-b595-0df90efd4c15.png";
@@ -17,10 +17,10 @@
     '.notification-tab-item[data-tab="info"]';
 
   const DELAY_KEY =
-    "ceriabet_loggedin_popup_closed_at_v2";
+    "ceriabet_loggedin_popup_closed_at_v3";
 
   const OPEN_INFO_KEY =
-    "ceriabet_open_announcement_info_v2";
+    "ceriabet_open_announcement_info_v3";
 
   const DELAY_MS =
     6 * 60 * 60 * 1000;
@@ -71,17 +71,17 @@
     style.id = STYLE_ID;
 
     style.textContent = `
-      @keyframes ceriabetLoggedInFadeInV2 {
+      @keyframes ceriabetLoggedInFadeInV3 {
         from { opacity: 0; }
         to { opacity: 1; }
       }
 
-      @keyframes ceriabetLoggedInFadeOutV2 {
+      @keyframes ceriabetLoggedInFadeOutV3 {
         from { opacity: 1; }
         to { opacity: 0; }
       }
 
-      @keyframes ceriabetLoggedInPopupInV2 {
+      @keyframes ceriabetLoggedInPopupInV3 {
         from {
           opacity: 0;
           transform:
@@ -97,7 +97,7 @@
         }
       }
 
-      @keyframes ceriabetExploreShineV2 {
+      @keyframes ceriabetExploreShineV3 {
         0% {
           left: -42%;
           opacity: 0;
@@ -139,13 +139,13 @@
         -webkit-backdrop-filter: blur(8px);
 
         animation:
-          ceriabetLoggedInFadeInV2
+          ceriabetLoggedInFadeInV3
           .3s ease forwards;
       }
 
       #${OVERLAY_ID}.is-closing {
         animation:
-          ceriabetLoggedInFadeOutV2
+          ceriabetLoggedInFadeOutV3
           .26s ease forwards;
       }
 
@@ -170,7 +170,7 @@
         pointer-events: none;
       }
 
-      #${POPUP_ID} .ceriabet-loggedin-card-v2 {
+      #${POPUP_ID} .ceriabet-loggedin-card-v3 {
         position: relative;
 
         width: min(92vw, 560px);
@@ -184,13 +184,13 @@
         pointer-events: auto;
 
         animation:
-          ceriabetLoggedInPopupInV2
+          ceriabetLoggedInPopupInV3
           .42s
           cubic-bezier(.22,.82,.3,1)
           forwards;
       }
 
-      #${POPUP_ID} .ceriabet-image-wrap-v2 {
+      #${POPUP_ID} .ceriabet-image-wrap-v3 {
         position: relative;
 
         width: 100%;
@@ -199,7 +199,7 @@
         place-items: center;
       }
 
-      #${POPUP_ID} .ceriabet-popup-image-v2 {
+      #${POPUP_ID} .ceriabet-popup-image-v3 {
         display: block;
 
         width: auto;
@@ -372,7 +372,7 @@
         z-index: 1;
 
         animation:
-          ceriabetExploreShineV2
+          ceriabetExploreShineV3
           3.2s
           ease-in-out
           infinite;
@@ -405,13 +405,13 @@
 
       @media (max-width: 520px) {
         #${POPUP_ID}
-        .ceriabet-loggedin-card-v2 {
+        .ceriabet-loggedin-card-v3 {
           width: min(94vw, 460px);
           gap: 14px;
         }
 
         #${POPUP_ID}
-        .ceriabet-popup-image-v2 {
+        .ceriabet-popup-image-v3 {
           max-height: 64vh;
         }
 
@@ -465,6 +465,7 @@
       if (typeof callback === "function") {
         callback();
       }
+
       return;
     }
 
@@ -547,15 +548,15 @@
 
     popup.innerHTML = `
       <div
-        class="ceriabet-loggedin-card-v2"
+        class="ceriabet-loggedin-card-v3"
       >
 
         <div
-          class="ceriabet-image-wrap-v2"
+          class="ceriabet-image-wrap-v3"
         >
 
           <img
-            class="ceriabet-popup-image-v2"
+            class="ceriabet-popup-image-v3"
             src="${IMAGE_URL}"
             alt="CERIABET"
           >
@@ -627,7 +628,6 @@
     }
 
     let attempts = 0;
-
     const maxAttempts = 60;
 
     const timer =
@@ -653,14 +653,6 @@
           ) {
             infoTab.click();
           }
-
-          window.setTimeout(() => {
-            infoTab.scrollIntoView({
-              behavior: "smooth",
-              block: "nearest",
-              inline: "center"
-            });
-          }, 180);
 
           return;
         }
