@@ -23,7 +23,6 @@
     const TARGETS_BEFORE = selectors
         .map(selector => selector + "::before")
         .join(",");
-
     const TARGETS_AFTER = selectors
         .map(selector => selector + "::after")
         .join(",");
@@ -41,57 +40,55 @@
         }
 
         /*
-         * KILAP HALUS DI DALAM BUTTON
-         * Dibuat tetap berada di area button dengan mask inset.
+         * KILAP:
+         * Box ::before ukurannya SAMA PERSIS dengan button.
+         * Yang bergerak hanya background-position,
+         * bukan box-nya. Jadi tidak akan bocor keluar.
          */
         ${TARGETS_BEFORE} {
             content: "";
             position: absolute;
-
-            top: 0;
-            left: -38%;
-
-            width: 34%;
-            height: 100%;
+            inset: 0;
 
             border-radius: inherit;
 
-            background: linear-gradient(
-                100deg,
-                rgba(255,255,255,0) 0%,
-                rgba(255,255,255,.03) 24%,
-                rgba(255,255,255,.14) 43%,
-                rgba(255,255,255,.30) 50%,
-                rgba(255,240,200,.22) 56%,
-                rgba(255,255,255,.07) 68%,
-                rgba(255,255,255,0) 100%
-            );
+            background-image:
+                linear-gradient(
+                    105deg,
+                    transparent 0%,
+                    transparent 39%,
+                    rgba(255,255,255,.05) 44%,
+                    rgba(255,255,255,.22) 49%,
+                    rgba(255,248,220,.38) 51%,
+                    rgba(255,255,255,.16) 54%,
+                    transparent 61%,
+                    transparent 100%
+                );
 
-            transform:
-                translateX(0)
-                skewX(-16deg);
+            background-size: 260% 100%;
+            background-repeat: no-repeat;
+            background-position: 140% 0;
 
             pointer-events: none;
             z-index: 2;
 
-            clip-path: inset(0 round 12px);
-
             animation:
-                ceriabetPromoSoftShineLTR
+                ceriabetPromoShineInside
                 3.2s
                 ease-in-out
                 infinite;
 
-            will-change:
-                transform,
-                opacity;
+            /*
+             * Ini memastikan visual kilap sendiri
+             * tetap terpotong sesuai bentuk button.
+             */
+            overflow: hidden;
+            clip-path: inset(0 round 999px);
         }
 
-        @keyframes ceriabetPromoSoftShineLTR {
+        @keyframes ceriabetPromoShineInside {
             0% {
-                transform:
-                    translateX(0)
-                    skewX(-16deg);
+                background-position: 140% 0;
                 opacity: 0;
             }
 
@@ -99,27 +96,24 @@
                 opacity: 1;
             }
 
-            42% {
+            48% {
                 opacity: 1;
             }
 
-            55% {
-                transform:
-                    translateX(410%)
-                    skewX(-16deg);
+            58% {
+                background-position: -140% 0;
                 opacity: 0;
             }
 
             100% {
-                transform:
-                    translateX(410%)
-                    skewX(-16deg);
+                background-position: -140% 0;
                 opacity: 0;
             }
         }
 
         /*
-         * ICON HOT DI LUAR POJOK KANAN ATAS
+         * ICON HOT:
+         * Tetap sengaja keluar dari pojok kanan atas.
          */
         ${TARGETS_AFTER} {
             content: "";
@@ -161,16 +155,12 @@
                 top: -14px;
                 right: -11px;
             }
-
-            ${TARGETS_BEFORE} {
-                width: 38%;
-            }
         }
 
         @media (prefers-reduced-motion: reduce) {
             ${TARGETS_BEFORE} {
                 animation: none;
-                display: none;
+                background-image: none;
             }
         }
     `;
