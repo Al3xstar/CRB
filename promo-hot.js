@@ -74,7 +74,7 @@
 
             animation:
                 ceriabetPromoShineInside
-                3.2s
+                4.2s
                 ease-in-out
                 infinite;
 
@@ -132,6 +132,33 @@
 
             pointer-events: none;
             z-index: 10;
+
+            animation:
+                ceriabetHotBlink
+                1.6s
+                ease-in-out
+                infinite;
+
+            transform-origin: center;
+            will-change:
+                opacity,
+                filter,
+                transform;
+        }
+
+        @keyframes ceriabetHotBlink {
+            0%,
+            100% {
+                opacity: 1;
+                filter: brightness(1);
+                transform: scale(1);
+            }
+
+            50% {
+                opacity: .48;
+                filter: brightness(1.35);
+                transform: scale(.96);
+            }
         }
 
         .promotion-sidebar,
@@ -161,6 +188,10 @@
             ${TARGETS_BEFORE} {
                 animation: none;
                 background-image: none;
+            }
+
+            ${TARGETS_AFTER} {
+                animation: none;
             }
         }
     `;
