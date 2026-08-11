@@ -1,18 +1,163 @@
 (function () {
+    "use strict";
 
-    if (document.querySelector("style[data-promo-hot]")) return;
+    const STYLE_ID = "ceriabet-promo-hot-shine-style";
 
-    const _d = s => atob(s);
+    if (document.getElementById(STYLE_ID)) return;
 
-    const css = _d(`
-YVtocmVmPSIvZGVza3RvcC9wcm9tb3Rpb24iXSxhW2hyZWY9Ii9tb2JpbGUvcHJvbW90aW9uIl0sYVtocmVmXj0iL2Rlc2t0b3AvYm9udXMjIl0sYVtocmVmXj0iL21vYmlsZS9ib251cyMiXSxhW2hyZWZePSIvZGVza3RvcC9jYXNoYmFjayMiXSxhW2hyZWZePSIvbW9iaWxlL2Nhc2hiYWNrIyJdLGFbaHJlZj0iL2Rlc2t0b3AvY29tbWlzc2lvbiJdLGFbaHJlZj0iL21vYmlsZS9jb21taXNzaW9uIl17cG9zaXRpb246cmVsYXRpdmV9YVtocmVmPSIvZGVza3RvcC9wcm9tb3Rpb24iXTo6YWZ0ZXIsYVtocmVmPSIvbW9iaWxlL3Byb21vdGlvbiJdOjphZnRlcixhW2hyZWZePSIvZGVza3RvcC9ib251cyMiXTo6YWZ0ZXIsYVtocmVmXj0iL21vYmlsZS9ib251cyMiXTo6YWZ0ZXIsYVtocmVmXj0iL2Rlc2t0b3AvY2FzaGJhY2sjIl06OmFmdGVyLGFbaHJlZl49Ii9tb2JpbGUvY2FzaGJhY2sjIl06OmFmdGVyLGFbaHJlZj0iL2Rlc2t0b3AvY29tbWlzc2lvbiJdOjphZnRlcixhW2hyZWY9Ii9tb2JpbGUvY29tbWlzc2lvbiJdOjphZnRlcntjb250ZW50OiIiO3Bvc2l0aW9uOmFic29sdXRlO3RvcDotNnB4O3JpZ2h0Oi0xMHB4O3dpZHRoOjI2cHg7aGVpZ2h0OjI2cHg7YmFja2dyb3VuZDp1cmwoIi8vZHN1b3duOWV2d3o0eS5jbG91ZGZyb250Lm5ldC9JbWFnZXMvaWNvbnMvZmxvYXRpbmctaWNvbi8xLnBuZz92PTIwMjUwNTI4Iikgbm8tcmVwZWF0IGNlbnRlci9jb250YWluO3otaW5kZXg6OTk7cG9pbnRlci1ldmVudHM6bm9uZTthbmltYXRpb246cHJvbW9QdWxzZSAxLjJzIGVhc2UtaW4tb3V0IGluZmluaXRlO3RyYW5zZm9ybS1vcmlnaW46Y2VudGVyfUBrZXlmcmFtZXMgcHJvbW9QdWxzZXswJXt0cmFuc2Zvcm06c2NhbGUoMSk7b3BhY2l0eToxfTUwJXt0cmFuc2Zvcm06c2NhbGUoMS4yNSk7b3BhY2l0eTouOX0xMDAle3RyYW5zZm9ybTpzY2FsZSgxKTtvcGFjaXR5OjF9fS5wcm9tb3Rpb24tc2lkZWJhciwucHJvbW90aW9uLWZpbHRlciwucHJvbW90aW9uLW1lbnV7b3ZlcmZsb3c6dmlzaWJsZSFpbXBvcnRhbnR9LnByb21vdGlvbi1zaWRlYmFyIGEsLnByb21vdGlvbi1maWx0ZXIgYXtwb3NpdGlvbjpyZWxhdGl2ZTt6LWluZGV4OjN9
-`);
+    const HOT_ICON =
+        "https://dsuown9evwz4y.cloudfront.net/Images/icons/floating-icon/1.png?v=20250528";
+
+    const selectors = [
+        'a[href^="/desktop/bonus#"]',
+        'a[href^="/mobile/bonus#"]',
+
+        'a[href^="/desktop/cashback#"]',
+        'a[href^="/mobile/cashback#"]',
+
+        'a[href^="/desktop/commission#"]',
+        'a[href^="/mobile/commission#"]'
+    ];
+
+    const TARGETS = selectors.join(",");
+    const TARGETS_BEFORE = selectors
+        .map(selector => selector + "::before")
+        .join(",");
+
+    const TARGETS_AFTER = selectors
+        .map(selector => selector + "::after")
+        .join(",");
 
     const style = document.createElement("style");
 
+    style.id = STYLE_ID;
     style.setAttribute("data-promo-hot", "1");
-    style.textContent = css;
+
+    style.textContent = `
+        ${TARGETS} {
+            position: relative !important;
+            overflow: hidden !important;
+            isolation: isolate;
+        }
+
+        ${TARGETS_BEFORE} {
+            content: "";
+            position: absolute;
+            top: -35%;
+            left: -34%;
+
+            width: 34%;
+            height: 170%;
+
+            background: linear-gradient(
+                100deg,
+                rgba(255,255,255,0) 0%,
+                rgba(255,255,255,.03) 24%,
+                rgba(255,255,255,.15) 43%,
+                rgba(255,255,255,.34) 50%,
+                rgba(255,240,200,.24) 56%,
+                rgba(255,255,255,.08) 68%,
+                rgba(255,255,255,0) 100%
+            );
+
+            transform:
+                translateX(0)
+                skewX(-18deg);
+
+            pointer-events: none;
+            z-index: 2;
+
+            animation:
+                ceriabetPromoSoftShineRTL
+                3.2s
+                ease-in-out
+                infinite;
+
+            will-change:
+                transform,
+                opacity;
+        }
+
+        @keyframes ceriabetPromoSoftShineRTL {
+            0% {
+                transform:
+                    translateX(0)
+                    skewX(-18deg);
+                opacity: 0;
+            }
+
+            8% {
+                opacity: 1;
+            }
+
+            42% {
+                opacity: 1;
+            }
+
+            55% {
+                transform:
+                    translateX(400%)
+                    skewX(-18deg);
+                opacity: 0;
+            }
+
+            100% {
+                transform:
+                    translateX(400%)
+                    skewX(-18deg);
+                opacity: 0;
+            }
+        }
+
+        ${TARGETS_AFTER} {
+            content: "";
+            position: absolute;
+            top: 2px;
+            right: 2px;
+
+            width: 26px;
+            height: 26px;
+
+            background:
+                url("${HOT_ICON}")
+                no-repeat
+                center / contain;
+
+            pointer-events: none;
+            z-index: 4;
+        }
+
+        .promotion-sidebar,
+        .promotion-filter,
+        .promotion-menu {
+            overflow: visible !important;
+        }
+
+        .promotion-sidebar a,
+        .promotion-filter a,
+        .promotion-menu a {
+            position: relative;
+            z-index: 3;
+        }
+
+        @media (max-width: 768px) {
+            ${TARGETS_AFTER} {
+                width: 24px;
+                height: 24px;
+            }
+
+            ${TARGETS_BEFORE} {
+                width: 38%;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            ${TARGETS_BEFORE} {
+                animation: none;
+                display: none;
+            }
+        }
+    `;
 
     document.head.appendChild(style);
-
 })();
