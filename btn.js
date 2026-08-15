@@ -1,957 +1,725 @@
-(function () {"use strict";
+(function () {
+    "use strict";
 
-const MOBILE_BREAKPOINT = 480;
+    /* =====================================================
+       CONFIG
+    ===================================================== */
 
-const MODAL_ID = "ceriabet-menu-modal";
-const FRAME_ID = "ceriabet-menu-frame";
-const STYLE_ID = "ceriabet-menu-style";
+    const MOBILE_BREAKPOINT = 480;
+    const STYLE_ID = "ceriabet-menu-style";
+    const MENU_CLASS = "btn-atas";
 
-const MENU = [
-    {
-        name: "CERIABET",
-        url: "https://ceriavpn.online/crb3",
-        image: "https://www.image2url.com/r2/default/images/1786403885683-20b27b7e-bd99-4060-941e-71e094bcfa97.gif"
-    },
-    {
-        name: "Telegram",
-        url: "https://ceriavpn.online/telegramchat",
-        image: "https://www.image2url.com/r2/default/images/1786403921709-643c8e72-5a6f-4e49-b414-d329a6afd95d.gif"
-    },
-    {
-        name: "RTP CERIABET",
-        url: "https://ceriavpn.online/rtp-gacor-ceriabet",
-        image: "https://www.image2url.com/r2/default/images/1786403949222-c3bbc8b1-f7a8-4569-b705-708ad7b9df83.gif"
-    },
-    {
-        name: "Prediksi Bola",
-        url: "https://ceriavpn.online/prediksi-bola",
-        image: "https://www.image2url.com/r2/default/images/1786403974097-a95a661e-949e-4c59-963c-5a7679dfd306.gif"
-    },
-    {
-        name: "Police CERIABET",
-        url: "https://ceriavpn.online/policecrb",
-        image: "https://www.image2url.com/r2/default/images/1786403998986-7b1e3ae9-e0f8-4f08-ab67-a4d3d6fd9760.gif"
-    }
-];
+    const MENU = [
+        {
+            name: "CERIABET",
+            url: "https://ceriavpn.online/crb3",
+            image: "https://www.image2url.com/r2/default/images/1786403885683-20b27b7e-bd99-4060-941e-71e094bcfa97.gif"
+        },
+        {
+            name: "Telegram",
+            url: "https://ceriavpn.online/telegramchat",
+            image: "https://www.image2url.com/r2/default/images/1786403921709-643c8e72-5a6f-4e49-b414-d329a6afd95d.gif"
+        },
+        {
+            name: "RTP CERIABET",
+            url: "https://ceriavpn.online/rtp-gacor-ceriabet",
+            image: "https://www.image2url.com/r2/default/images/1786403949222-c3bbc8b1-f7a8-4569-b705-708ad7b9df83.gif"
+        },
+        {
+            name: "Prediksi Bola",
+            url: "https://ceriavpn.online/prediksi-bola",
+            image: "https://www.image2url.com/r2/default/images/1786403974097-a95a661e-949e-4c59-963c-5a7679dfd306.gif"
+        },
+        {
+            name: "Police CERIABET",
+            url: "https://ceriavpn.online/policecrb",
+            image: "https://www.image2url.com/r2/default/images/1786403998986-7b1e3ae9-e0f8-4f08-ab67-a4d3d6fd9760.gif"
+        }
+    ];
 
-/* =====================================================
-   CSS
-===================================================== */
 
-function injectStyle() {
-    if (document.getElementById(STYLE_ID)) return;
+    /* =====================================================
+       CSS
+    ===================================================== */
 
-    const css = document.createElement("style");
-    css.id = STYLE_ID;
+    function injectStyle() {
 
-    css.textContent = `
-
-        /* =========================
-           MENU 5 TOMBOL
-        ========================= */
-
-        .btn-atas {
-            display: grid;
-            grid-template-columns: repeat(5, minmax(0, 1fr));
-            align-items: center;
-            width: 100%;
-            padding: 6px 8px;
-            margin: 6px 0;
-            box-sizing: border-box;
-            gap: 6px;
+        if (document.getElementById(STYLE_ID)) {
+            return;
         }
 
-        .btn-atas .ceriabet-popup-btn {
-            display: flex;
-            justify-content: center;
-            align-items: center;
+        const style = document.createElement("style");
 
-            width: 100%;
-            min-width: 0;
+        style.id = STYLE_ID;
 
-            padding: 0;
-            margin: 0;
+        style.textContent = `
 
-            border: 0;
-            outline: none;
-            background: transparent;
+            /* =========================================
+               CONTAINER 5 MENU
+            ========================================= */
 
-            cursor: pointer;
-            -webkit-tap-highlight-color: transparent;
-        }
+            .${MENU_CLASS} {
+                display: grid;
+                grid-template-columns: repeat(5, minmax(0, 1fr));
 
-        .btn-atas .ceriabet-popup-btn img {
-            display: block;
+                align-items: center;
+                justify-content: center;
 
-            width: 60px;
-            max-width: 100%;
-            height: 60px;
+                width: 100%;
 
-            object-fit: contain;
+                padding: 6px 8px;
+                margin: 6px 0;
 
-            border: 0;
-            pointer-events: none;
+                gap: 6px;
 
-            transition:
-                transform .15s ease,
-                filter .15s ease;
-        }
+                box-sizing: border-box;
 
-        .btn-atas .ceriabet-popup-btn:active img {
-            transform: scale(.92);
-            filter: brightness(.9);
-        }
-
-        @media (min-width: 481px) {
-            .btn-atas {
                 position: relative;
                 z-index: 5;
-
-                max-width: 1200px;
-
-                margin: 8px auto;
-                padding: 8px 12px;
-            }
-        }
-
-        @media (max-width: 480px) {
-            .btn-atas {
-                padding: 5px 4px;
-                margin: 6px 0;
-                gap: 3px;
             }
 
-            .btn-atas .ceriabet-popup-btn img {
-                width: 52px;
-                height: 52px;
+
+            /* =========================================
+               BUTTON / LINK
+            ========================================= */
+
+            .${MENU_CLASS} .ceriabet-menu-btn {
+
+                display: flex;
+
+                justify-content: center;
+                align-items: center;
+
+                width: 100%;
+                min-width: 0;
+
+                padding: 0;
+                margin: 0;
+
+                border: 0;
+                outline: none;
+
+                background: transparent;
+
+                text-decoration: none;
+
+                cursor: pointer;
+
+                -webkit-tap-highlight-color: transparent;
+
+                user-select: none;
+                -webkit-user-select: none;
             }
-        }
 
 
-        /* =========================
-           POPUP / MODAL
-        ========================= */
+            /* =========================================
+               IMAGE / GIF
+            ========================================= */
 
-        #${MODAL_ID} {
-            position: fixed;
-            inset: 0;
+            .${MENU_CLASS} .ceriabet-menu-btn img {
 
-            width: 100vw;
-            height: 100vh;
-            height: 100dvh;
+                display: block;
 
-            background: #000;
+                width: 60px;
+                max-width: 100%;
 
-            z-index: 2147483647;
+                height: 60px;
 
-            display: none;
+                object-fit: contain;
 
-            overflow: hidden;
+                border: 0;
 
-            opacity: 0;
+                pointer-events: none;
 
-            transition: opacity .2s ease;
-        }
-
-        #${MODAL_ID}.show {
-            display: block;
-            opacity: 1;
-        }
-
-
-        /* =========================
-           IFRAME
-        ========================= */
-
-        #${FRAME_ID} {
-            position: absolute;
-            inset: 0;
-
-            width: 100%;
-            height: 100%;
-
-            border: 0;
-            outline: 0;
-
-            display: block;
-
-            background: #000;
-
-            z-index: 1;
-        }
-
-
-        /* =========================
-           LOADING
-        ========================= */
-
-        .ceriabet-menu-loader {
-            position: absolute;
-            inset: 0;
-
-            z-index: 3;
-
-            display: flex;
-            align-items: center;
-            justify-content: center;
-
-            background: #08050d;
-
-            color: #fff;
-
-            font-family:
-                Arial,
-                Helvetica,
-                sans-serif;
-
-            font-size: 14px;
-            font-weight: 700;
-        }
-
-        .ceriabet-menu-loader::before {
-            content: "";
-
-            width: 32px;
-            height: 32px;
-
-            margin-right: 10px;
-
-            border: 3px solid rgba(255,255,255,.2);
-            border-top-color: #a855f7;
-
-            border-radius: 50%;
-
-            animation:
-                ceriabetMenuSpin
-                .75s linear infinite;
-        }
-
-        @keyframes ceriabetMenuSpin {
-            to {
-                transform: rotate(360deg);
+                transition:
+                    transform .15s ease,
+                    filter .15s ease,
+                    opacity .15s ease;
             }
-        }
 
 
-        /* =========================
-           TOMBOL CLOSE
-        ========================= */
+            /* =========================================
+               HOVER
+            ========================================= */
 
-        .ceriabet-menu-close {
-            position: absolute;
+            @media (hover: hover) {
 
-            top: max(
-                12px,
-                env(safe-area-inset-top)
-            );
+                .${MENU_CLASS} .ceriabet-menu-btn:hover img {
 
-            right: max(
-                12px,
-                env(safe-area-inset-right)
-            );
+                    transform: scale(1.07);
 
-            width: 44px;
-            height: 44px;
-
-            padding: 0;
-            margin: 0;
-
-            display: flex;
-            align-items: center;
-            justify-content: center;
-
-            border: 2px solid rgba(255,255,255,.9);
-
-            border-radius: 50%;
-
-            background:
-                linear-gradient(
-                    180deg,
-                    #b868ff 0%,
-                    #7e22ce 48%,
-                    #3b0764 100%
-                );
-
-            color: #fff;
-
-            font-family:
-                Arial,
-                Helvetica,
-                sans-serif;
-
-            font-size: 29px;
-            font-weight: 900;
-            line-height: 1;
-
-            cursor: pointer;
-
-            z-index: 10;
-
-            box-shadow:
-                0 0 18px rgba(168,85,247,.95),
-                0 5px 20px rgba(0,0,0,.65);
-
-            outline: none;
-
-            -webkit-tap-highlight-color: transparent;
-
-            transition:
-                transform .15s ease,
-                filter .15s ease;
-        }
-
-        .ceriabet-menu-close:hover {
-            filter: brightness(1.15);
-        }
-
-        .ceriabet-menu-close:active {
-            transform: scale(.9);
-        }
-
-
-        /* =========================
-           NAMA HALAMAN
-        ========================= */
-
-        .ceriabet-menu-title {
-            position: absolute;
-
-            top: max(
-                18px,
-                env(safe-area-inset-top)
-            );
-
-            left: 50%;
-
-            transform: translateX(-50%);
-
-            max-width: 65%;
-
-            color: #fff;
-
-            font-family:
-                Arial,
-                Helvetica,
-                sans-serif;
-
-            font-size: 13px;
-            font-weight: 800;
-
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-
-            text-align: center;
-
-            background: rgba(0,0,0,.55);
-
-            padding: 7px 14px;
-
-            border-radius: 20px;
-
-            z-index: 5;
-
-            pointer-events: none;
-
-            backdrop-filter: blur(8px);
-            -webkit-backdrop-filter: blur(8px);
-        }
-    `;
-
-    document.head.appendChild(css);
-}
-
-
-/* =====================================================
-   LOCK SCROLL
-===================================================== */
-
-let oldHtmlOverflow = "";
-let oldBodyOverflow = "";
-
-function lockPageScroll() {
-    oldHtmlOverflow =
-        document.documentElement.style.overflow || "";
-
-    oldBodyOverflow =
-        document.body.style.overflow || "";
-
-    document.documentElement.style.overflow = "hidden";
-    document.body.style.overflow = "hidden";
-}
-
-function unlockPageScroll() {
-    document.documentElement.style.overflow =
-        oldHtmlOverflow;
-
-    document.body.style.overflow =
-        oldBodyOverflow;
-}
-
-
-/* =====================================================
-   CREATE MODAL
-===================================================== */
-
-function createModal() {
-    let modal =
-        document.getElementById(MODAL_ID);
-
-    if (modal) {
-        return modal;
-    }
-
-    modal = document.createElement("div");
-
-    modal.id = MODAL_ID;
-
-    modal.setAttribute(
-        "role",
-        "dialog"
-    );
-
-    modal.setAttribute(
-        "aria-modal",
-        "true"
-    );
-
-    modal.setAttribute(
-        "aria-hidden",
-        "true"
-    );
-
-    modal.innerHTML = `
-
-        <div class="ceriabet-menu-loader">
-            Loading...
-        </div>
-
-        <div class="ceriabet-menu-title">
-            CERIABET
-        </div>
-
-        <button
-            type="button"
-            class="ceriabet-menu-close"
-            aria-label="Tutup"
-            title="Tutup"
-        >
-            ×
-        </button>
-
-        <iframe
-            id="${FRAME_ID}"
-            src="about:blank"
-            title="CERIABET"
-            allow="autoplay; fullscreen"
-            allowfullscreen
-            referrerpolicy="no-referrer-when-downgrade"
-        ></iframe>
-    `;
-
-    document.body.appendChild(modal);
-
-    const frame =
-        modal.querySelector(
-            "#" + FRAME_ID
-        );
-
-    const loader =
-        modal.querySelector(
-            ".ceriabet-menu-loader"
-        );
-
-    const closeButton =
-        modal.querySelector(
-            ".ceriabet-menu-close"
-        );
-
-
-    /* =========================
-       FRAME SUDAH LOAD
-    ========================= */
-
-    frame.addEventListener(
-        "load",
-        function () {
-
-            if (
-                modal.classList.contains("show")
-            ) {
-                loader.style.display = "none";
+                    filter:
+                        brightness(1.12)
+                        drop-shadow(
+                            0 4px 8px
+                            rgba(0,0,0,.25)
+                        );
+                }
             }
-        }
-    );
 
 
-    /* =========================
-       CLOSE
-    ========================= */
+            /* =========================================
+               CLICK
+            ========================================= */
 
-    function closeModal() {
+            .${MENU_CLASS} .ceriabet-menu-btn:active img {
 
-        modal.classList.remove("show");
+                transform: scale(.91);
 
-        modal.setAttribute(
-            "aria-hidden",
-            "true"
-        );
+                filter: brightness(.88);
+            }
 
-        frame.src = "about:blank";
 
-        loader.style.display = "flex";
+            /* =========================================
+               DESKTOP
+            ========================================= */
 
-        unlockPageScroll();
+            @media (min-width: 481px) {
+
+                .${MENU_CLASS} {
+
+                    max-width: 1200px;
+
+                    margin: 8px auto;
+
+                    padding: 8px 12px;
+
+                    gap: 8px;
+                }
+
+                .${MENU_CLASS} .ceriabet-menu-btn img {
+
+                    width: 60px;
+                    height: 60px;
+                }
+            }
+
+
+            /* =========================================
+               MOBILE
+            ========================================= */
+
+            @media (max-width: 480px) {
+
+                .${MENU_CLASS} {
+
+                    padding: 5px 4px;
+
+                    margin: 6px 0;
+
+                    gap: 3px;
+                }
+
+                .${MENU_CLASS} .ceriabet-menu-btn img {
+
+                    width: 52px;
+                    height: 52px;
+                }
+            }
+
+
+            /* =========================================
+               VERY SMALL MOBILE
+            ========================================= */
+
+            @media (max-width: 360px) {
+
+                .${MENU_CLASS} {
+
+                    padding-left: 2px;
+                    padding-right: 2px;
+
+                    gap: 2px;
+                }
+
+                .${MENU_CLASS} .ceriabet-menu-btn img {
+
+                    width: 46px;
+                    height: 46px;
+                }
+            }
+
+        `;
+
+        document.head.appendChild(style);
     }
 
 
-    closeButton.addEventListener(
-        "click",
-        closeModal
-    );
+    /* =====================================================
+       CREATE MENU BOX
+    ===================================================== */
 
+    function createButtonBox() {
 
-    modal.closeCeriabetMenu =
-        closeModal;
-
-
-    return modal;
-}
-
-
-/* =====================================================
-   OPEN POPUP
-===================================================== */
-
-function openModal(url, title) {
-
-    const modal =
-        createModal();
-
-    const frame =
-        modal.querySelector(
-            "#" + FRAME_ID
-        );
-
-    const loader =
-        modal.querySelector(
-            ".ceriabet-menu-loader"
-        );
-
-    const titleBox =
-        modal.querySelector(
-            ".ceriabet-menu-title"
+        let box = document.querySelector(
+            "." + MENU_CLASS
         );
 
 
-    titleBox.textContent =
-        title || "CERIABET";
+        /* =========================================
+           JIKA SUDAH ADA
+        ========================================= */
 
-    loader.style.display =
-        "flex";
+        if (box) {
 
-
-    modal.classList.add(
-        "show"
-    );
+            return box;
+        }
 
 
-    modal.setAttribute(
-        "aria-hidden",
-        "false"
-    );
+        /* =========================================
+           BUAT CONTAINER
+        ========================================= */
 
+        box = document.createElement("div");
 
-    lockPageScroll();
+        box.className = MENU_CLASS;
 
-
-    /*
-     * Sedikit delay agar modal muncul
-     * terlebih dahulu sebelum iframe load
-     */
-    setTimeout(
-        function () {
-            frame.src = url;
-        },
-        30
-    );
-}
-
-
-/* =====================================================
-   CREATE 5 BUTTON
-===================================================== */
-
-function createButtonBox() {
-
-    let box =
-        document.querySelector(
-            ".btn-atas"
+        box.setAttribute(
+            "aria-label",
+            "Menu CERIABET"
         );
 
-    if (box) {
-        return box;
-    }
+
+        /* =========================================
+           BUAT 5 MENU
+        ========================================= */
+
+        MENU.forEach(function (item) {
+
+            /*
+             * Menggunakan <a> lebih stabil daripada
+             * window.open karena tidak mudah dianggap
+             * popup oleh browser.
+             */
+
+            const link = document.createElement("a");
 
 
-    box =
-        document.createElement(
-            "div"
-        );
-
-    box.className =
-        "btn-atas";
+            link.className =
+                "ceriabet-menu-btn";
 
 
-    MENU.forEach(
-        function (item) {
-
-            const button =
-                document.createElement(
-                    "button"
-                );
-
-            button.type =
-                "button";
-
-            button.className =
-                "ceriabet-popup-btn";
+            link.href =
+                item.url;
 
 
-            button.setAttribute(
+            /*
+             * NEW TAB / NEW WINDOW
+             */
+
+            link.target =
+                "_blank";
+
+
+            /*
+             * SECURITY
+             */
+
+            link.rel =
+                "noopener noreferrer";
+
+
+            /*
+             * ACCESSIBILITY
+             */
+
+            link.setAttribute(
                 "aria-label",
                 item.name
             );
 
 
-            button.setAttribute(
+            link.setAttribute(
                 "title",
                 item.name
             );
 
 
-            button.innerHTML = `
-                <img
-                    src="${item.image}"
-                    alt="${item.name}"
-                    draggable="false"
-                >
-            `;
+            /* =====================================
+               IMAGE
+            ===================================== */
+
+            const image =
+                document.createElement("img");
 
 
-            button.addEventListener(
-                "click",
+            image.src =
+                item.image;
+
+
+            image.alt =
+                item.name;
+
+
+            image.draggable =
+                false;
+
+
+            image.loading =
+                "eager";
+
+
+            image.decoding =
+                "async";
+
+
+            /* =====================================
+               ERROR IMAGE
+            ===================================== */
+
+            image.addEventListener(
+                "error",
                 function () {
 
-                    openModal(
-                        item.url,
-                        item.name
-                    );
+                    /*
+                     * Jangan merusak layout kalau
+                     * server GIF sedang error.
+                     */
+
+                    image.style.opacity =
+                        ".35";
                 }
+            );
+
+
+            /* =====================================
+               APPEND
+            ===================================== */
+
+            link.appendChild(
+                image
             );
 
 
             box.appendChild(
-                button
+                link
             );
+        });
+
+
+        return box;
+    }
+
+
+    /* =====================================================
+       POSISI BUTTON
+    ===================================================== */
+
+    function placeButtonBox() {
+
+        const box =
+            createButtonBox();
+
+
+        const isMobile =
+            window.innerWidth <=
+            MOBILE_BREAKPOINT;
+
+
+        /* =================================================
+           MOBILE
+
+           Posisi:
+           sebelum .jackpot-play-section
+        ================================================= */
+
+        if (isMobile) {
+
+            const jackpotSection =
+                document.querySelector(
+                    ".jackpot-play-section"
+                );
+
+
+            if (
+                !jackpotSection ||
+                !jackpotSection.parentNode
+            ) {
+
+                return false;
+            }
+
+
+            /*
+             * Jangan insert ulang
+             * kalau posisi sudah benar.
+             */
+
+            if (
+                box.nextElementSibling !==
+                jackpotSection
+            ) {
+
+                jackpotSection
+                    .parentNode
+                    .insertBefore(
+                        box,
+                        jackpotSection
+                    );
+            }
+
+
+            return true;
         }
-    );
 
 
-    return box;
-}
+        /* =================================================
+           DESKTOP
 
+           Posisi:
+           announcement
+           ↓
+           5 menu
+           ↓
+           home content
+        ================================================= */
 
-/* =====================================================
-   POSISI BUTTON BOX
-===================================================== */
-
-function placeButtonBox() {
-
-    const box =
-        createButtonBox();
-
-
-    const isMobile =
-        window.innerWidth <=
-        MOBILE_BREAKPOINT;
-
-
-    /* =========================
-       MOBILE
-    ========================= */
-
-    if (isMobile) {
-
-        const jackpotSection =
+        const announcementOuter =
             document.querySelector(
-                ".jackpot-play-section"
+                ".announcement-outer-container"
+            );
+
+
+        const homeInner =
+            document.querySelector(
+                ".home-inner-container"
             );
 
 
         if (
-            !jackpotSection ||
-            !jackpotSection.parentNode
+            !announcementOuter ||
+            !homeInner
         ) {
+
             return false;
         }
 
 
+        /* =================================================
+           JIKA KEDUANYA SATU PARENT
+        ================================================= */
+
         if (
-            box.nextElementSibling !==
-            jackpotSection
+            announcementOuter.parentNode &&
+            announcementOuter.parentNode ===
+            homeInner.parentNode
         ) {
 
-            jackpotSection
-                .parentNode
-                .insertBefore(
-                    box,
-                    jackpotSection
-                );
+            if (
+                box.nextElementSibling !==
+                homeInner
+            ) {
+
+                homeInner
+                    .parentNode
+                    .insertBefore(
+                        box,
+                        homeInner
+                    );
+            }
+
+
+            return true;
         }
 
 
-        return true;
-    }
+        /* =================================================
+           FALLBACK
+
+           Taruh setelah announcement
+        ================================================= */
+
+        if (
+            announcementOuter.parentNode
+        ) {
+
+            announcementOuter
+                .insertAdjacentElement(
+                    "afterend",
+                    box
+                );
 
 
-    /* =========================
-       DESKTOP
-    ========================= */
-
-    const announcementOuter =
-        document.querySelector(
-            ".announcement-outer-container"
-        );
+            return true;
+        }
 
 
-    const homeInner =
-        document.querySelector(
-            ".home-inner-container"
-        );
-
-
-    if (
-        !announcementOuter ||
-        !homeInner
-    ) {
         return false;
     }
 
 
-    if (
-        announcementOuter.parentNode &&
-        announcementOuter.parentNode ===
-        homeInner.parentNode
-    ) {
+    /* =====================================================
+       INIT
+    ===================================================== */
 
-        if (
-            box.nextElementSibling !==
-            homeInner
-        ) {
+    function init() {
 
-            homeInner
-                .parentNode
-                .insertBefore(
-                    box,
-                    homeInner
-                );
-        }
+        /* =============================================
+           CSS
+        ============================================= */
+
+        injectStyle();
 
 
-        return true;
-    }
+        /* =============================================
+           COBA PASANG LANGSUNG
+        ============================================= */
+
+        placeButtonBox();
 
 
-    if (
-        announcementOuter.parentNode
-    ) {
+        /* =============================================
+           CHECKER
 
-        announcementOuter
-            .insertAdjacentElement(
-                "afterend",
-                box
-            );
+           Untuk website yang element-nya muncul
+           setelah JavaScript / SPA selesai load.
+        ============================================= */
 
+        let checker =
+            setInterval(
+                function () {
 
-        return true;
-    }
-
-
-    return false;
-}
-
-
-/* =====================================================
-   ESC UNTUK CLOSE
-===================================================== */
-
-function handleEscape(event) {
-
-    if (
-        event.key !== "Escape"
-    ) {
-        return;
-    }
-
-
-    const modal =
-        document.getElementById(
-            MODAL_ID
-        );
-
-
-    if (
-        modal &&
-        modal.classList.contains(
-            "show"
-        ) &&
-        typeof modal
-            .closeCeriabetMenu ===
-            "function"
-    ) {
-
-        modal
-            .closeCeriabetMenu();
-    }
-}
-
-
-/* =====================================================
-   INIT
-===================================================== */
-
-function init() {
-
-    injectStyle();
-
-    createModal();
-
-
-    let checker =
-        setInterval(
-            function () {
-
-                const success =
-                    placeButtonBox();
-
-
-                if (success) {
-                    clearInterval(
-                        checker
-                    );
-                }
-
-            },
-            500
-        );
-
-
-    /* =========================
-       RESIZE
-    ========================= */
-
-    let resizeTimer;
-
-
-    window.addEventListener(
-        "resize",
-        function () {
-
-            clearTimeout(
-                resizeTimer
-            );
-
-
-            resizeTimer =
-                setTimeout(
-                    function () {
-
+                    const success =
                         placeButtonBox();
 
-                    },
-                    150
-                );
-        }
-    );
+
+                    if (success) {
+
+                        clearInterval(
+                            checker
+                        );
+                    }
+
+                },
+                500
+            );
 
 
-    /* =========================
-       SPA / DYNAMIC WEBSITE
-    ========================= */
+        /* =============================================
+           RESIZE
 
-    const observer =
-        new MutationObserver(
+           Kalau berubah Desktop ↔ Mobile,
+           posisi menu otomatis menyesuaikan.
+        ============================================= */
+
+        let resizeTimer;
+
+
+        window.addEventListener(
+            "resize",
             function () {
 
-                const box =
-                    document.querySelector(
-                        ".btn-atas"
+                clearTimeout(
+                    resizeTimer
+                );
+
+
+                resizeTimer =
+                    setTimeout(
+                        function () {
+
+                            placeButtonBox();
+
+                        },
+                        150
                     );
-
-
-                if (!box) {
-                    placeButtonBox();
-                }
             }
         );
 
 
-    observer.observe(
-        document.body,
-        {
-            childList: true,
-            subtree: true
-        }
-    );
+        /* =============================================
+           SPA / DYNAMIC WEBSITE
+
+           Jika halaman website mengganti DOM,
+           menu akan dibuat/pindahkan lagi.
+        ============================================= */
+
+        const observer =
+            new MutationObserver(
+                function () {
+
+                    const box =
+                        document.querySelector(
+                            "." + MENU_CLASS
+                        );
 
 
-    /* =========================
-       ESC
-    ========================= */
+                    /*
+                     * Jika menu hilang karena SPA
+                     */
 
-    document.addEventListener(
-        "keydown",
-        handleEscape
-    );
+                    if (!box) {
+
+                        placeButtonBox();
+
+                        return;
+                    }
 
 
-    /* =========================
-       STOP CHECKER 30 DETIK
-    ========================= */
+                    /*
+                     * Kalau target halaman berubah,
+                     * pastikan posisinya benar.
+                     */
 
-    setTimeout(
-        function () {
-            clearInterval(
-                checker
+                    if (
+                        document.body.contains(box)
+                    ) {
+
+                        placeButtonBox();
+                    }
+
+                }
             );
-        },
-        30000
-    );
-}
 
 
-/* =====================================================
-   START
-===================================================== */
+        observer.observe(
+            document.body,
+            {
+                childList: true,
+                subtree: true
+            }
+        );
 
-if (
-    document.readyState ===
-    "loading"
-) {
 
-    document.addEventListener(
-        "DOMContentLoaded",
-        init,
-        {
-            once: true
-        }
-    );
+        /* =============================================
+           STOP CHECKER SETELAH 30 DETIK
 
-} else {
+           MutationObserver tetap aktif.
+        ============================================= */
 
-    init();
+        setTimeout(
+            function () {
 
-}
+                clearInterval(
+                    checker
+                );
+
+            },
+            30000
+        );
+    }
+
+
+    /* =====================================================
+       START
+    ===================================================== */
+
+    if (
+        document.readyState ===
+        "loading"
+    ) {
+
+        document.addEventListener(
+            "DOMContentLoaded",
+            init,
+            {
+                once: true
+            }
+        );
+
+    } else {
+
+        init();
+    }
 
 })();
