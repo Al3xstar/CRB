@@ -1,4 +1,4 @@
-(function () {
+function () {
     "use strict";
 
     const BANNER = "https://www.image2url.com/r2/default/images/1787639732919-c1b1811d-35cb-4ea1-80ae-d60ace227101.png";
@@ -77,7 +77,7 @@
                 position: relative;
                 z-index: 4;
                 width: 100%;
-                height: 34px;
+                height: 24px;
                 display: flex;
                 align-items: center;
                 overflow: hidden;
@@ -93,10 +93,10 @@
                 padding-left: 100%;
                 padding-right: 100%;
                 white-space: nowrap;
-                font-size: 13px;
+                font-size: 10px;
                 font-weight: 700;
                 letter-spacing: .45px;
-                line-height: 34px;
+                line-height: 24px;
                 animation: vipMarquee 24s linear infinite;
                 will-change: transform;
             }
@@ -143,12 +143,12 @@
 
             @media (max-width: 600px) {
                 .vip-running-text {
-                    height: 30px;
+                    height: 22px;
                 }
 
                 .vip-running-text span {
-                    font-size: 11px;
-                    line-height: 30px;
+                    font-size: 9px;
+                    line-height: 22px;
                     animation-duration: 21s;
                 }
             }
