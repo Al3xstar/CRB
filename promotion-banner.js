@@ -2,7 +2,7 @@
     "use strict";
 
     const BANNER = "https://www.image2url.com/r2/default/images/1787639732919-c1b1811d-35cb-4ea1-80ae-d60ace227101.png";
-    const LINK = "https://ceriavpn.online/vipcrb";
+    const LINK = "https://ceriavpn.online/allinone";
     const ATTR = "data-banner-ceriabet";
     const RUNNING_TEXT = "INGIN MENJADI BAGIAN MEMBER VIP KAMI? HUBUNGI TEAM VIP KAMI MELALUI LINK DIATAS INI !";
 
