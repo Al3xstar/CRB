@@ -1,17 +1,15 @@
 (function () {
     "use strict";
 
-    const BANNER = "https://www.image2url.com/r2/default/images/1786406368655-e2e39597-a10a-4755-8153-ee3b2005ca40.png";
-
-    const LINK = "https://ceriavpn.online/allinone";
-
+    const BANNER = "https://www.image2url.com/r2/default/images/1787639732919-c1b1811d-35cb-4ea1-80ae-d60ace227101.png";
+    const LINK = "https://ceriavpn.online/vipcrb";
     const ATTR = "data-banner-ceriabet";
+    const RUNNING_TEXT = "INGIN MENJADI BAGIAN MEMBER VIP KAMI? HUBUNGI TEAM VIP KAMI MELALUI LINK DIATAS INI !";
 
     function injectStyle() {
         if (document.querySelector("style[data-promotion-banner]")) return;
 
         const style = document.createElement("style");
-
         style.setAttribute("data-promotion-banner", "1");
 
         style.textContent = `
@@ -23,8 +21,13 @@
                 box-shadow: none;
             }
 
+            .promotion-banner a {
+                display: block;
+            }
+
             .promotion-banner img.main-banner {
                 width: 100%;
+                height: auto;
                 display: block;
                 border-radius: 0;
             }
@@ -66,8 +69,36 @@
                 -webkit-mask-composite: xor;
                 mask-composite: exclude;
                 pointer-events: none;
-                z-index: 3;
+                z-index: 10;
                 opacity: .95;
+            }
+
+            .vip-running-text {
+                position: relative;
+                z-index: 4;
+                width: 100%;
+                height: 34px;
+                display: flex;
+                align-items: center;
+                overflow: hidden;
+                background: #050505;
+                border-top: 1px solid rgba(255,255,255,.16);
+                color: #ffffff;
+            }
+
+            .vip-running-text span {
+                display: inline-block;
+                flex: none;
+                width: max-content;
+                padding-left: 100%;
+                padding-right: 100%;
+                white-space: nowrap;
+                font-size: 13px;
+                font-weight: 700;
+                letter-spacing: .45px;
+                line-height: 34px;
+                animation: vipMarquee 24s linear infinite;
+                will-change: transform;
             }
 
             @keyframes starBlink {
@@ -99,6 +130,36 @@
                     background-position: 250% 50%;
                 }
             }
+
+            @keyframes vipMarquee {
+                from {
+                    transform: translateX(0);
+                }
+
+                to {
+                    transform: translateX(-100%);
+                }
+            }
+
+            @media (max-width: 600px) {
+                .vip-running-text {
+                    height: 30px;
+                }
+
+                .vip-running-text span {
+                    font-size: 11px;
+                    line-height: 30px;
+                    animation-duration: 21s;
+                }
+            }
+
+            @media (prefers-reduced-motion: reduce) {
+                .promotion-banner::before,
+                .promotion-banner::after,
+                .vip-running-text span {
+                    animation-play-state: paused;
+                }
+            }
         `;
 
         document.head.appendChild(style);
@@ -108,19 +169,29 @@
         const wrapper = document.createElement("div");
         const link = document.createElement("a");
         const img = document.createElement("img");
+        const ticker = document.createElement("div");
+        const tickerText = document.createElement("span");
 
         wrapper.className = "promotion-banner";
 
         link.href = LINK;
         link.target = "_blank";
         link.rel = "noopener noreferrer";
+        link.setAttribute("aria-label", "Hubungi Team VIP CERIABET");
 
         img.src = BANNER;
+        img.alt = "Banner Member VIP CERIABET";
         img.className = "main-banner";
         img.setAttribute(ATTR, "1");
 
+        ticker.className = "vip-running-text";
+        ticker.setAttribute("aria-label", RUNNING_TEXT);
+        tickerText.textContent = RUNNING_TEXT;
+
         link.appendChild(img);
+        ticker.appendChild(tickerText);
         wrapper.appendChild(link);
+        wrapper.appendChild(ticker);
 
         target.insertBefore(wrapper, target.firstChild);
     }
