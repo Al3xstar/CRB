@@ -77,7 +77,7 @@
                 position: relative;
                 z-index: 4;
                 width: 100%;
-                height: 24px;
+                height: 20px;
                 display: flex;
                 align-items: center;
                 overflow: hidden;
@@ -93,10 +93,10 @@
                 padding-left: 100%;
                 padding-right: 100%;
                 white-space: nowrap;
-                font-size: 10px;
+                font-size: 9px;
                 font-weight: 700;
                 letter-spacing: .45px;
-                line-height: 24px;
+                line-height: 20px;
                 animation: vipMarquee 24s linear infinite;
                 will-change: transform;
             }
@@ -143,12 +143,12 @@
 
             @media (max-width: 600px) {
                 .vip-running-text {
-                    height: 22px;
+                    height: 18px;
                 }
 
                 .vip-running-text span {
-                    font-size: 9px;
-                    line-height: 22px;
+                    font-size: 8px;
+                    line-height: 18px;
                     animation-duration: 21s;
                 }
             }
