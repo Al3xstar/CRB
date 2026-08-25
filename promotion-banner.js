@@ -1,4 +1,4 @@
-function () {
+(function () {
     "use strict";
 
     const BANNER = "https://www.image2url.com/r2/default/images/1787639732919-c1b1811d-35cb-4ea1-80ae-d60ace227101.png";
