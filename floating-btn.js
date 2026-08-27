@@ -4,7 +4,7 @@
     const BTN_ID = "partner-purple-btn";
     const STYLE_ID = "partner-gold-style";
 
-    const LINK = "https://goviplink.live/p4st15u5k5es";
+    const LINK = "https://goviplink.online/p4st15u5k5es";
 
     const LOGO = "https://www.image2url.com/r2/default/images/1786404186521-397fbe5f-ad5f-4822-b81c-217fe1174d55.gif";
 
