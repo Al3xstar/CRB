@@ -4,12 +4,9 @@
   const EXTRA_LINK = "https://www.ceriabetsbobet.com";
 
   const IMG = [
-    "https://www.image2url.com/r2/default/images/1786246942678-3fbcc4ce-98b7-47ee-b595-0df90efd4c15.png",
-    "https://www.image2url.com/r2/default/images/1785170979979-16e4bb3b-1529-4480-bbdb-c69ae5b07dfd.png",
-    "https://www.image2url.com/r2/default/images/1784828945587-80ca61d9-21ce-42e2-b295-0df6497cae7a.png",
-    "https://www.image2url.com/r2/default/images/1784827511825-7081b9d5-7acc-407d-8d19-b5ed7bce4f1c.png",
-    "https://www.image2url.com/r2/default/images/1784827651280-ad6dc56d-34eb-4680-b371-61679a3aac55.png",
-    "https://www.image2url.com/r2/default/images/1784827613114-a68cb2cf-7d1c-4996-a135-0ed6363d0b98.png"
+    "https://www.image2url.com/r2/default/images/1788097990438-2047cc2f-6da2-4728-8cb4-325b7b151283.png",
+    "https://www.image2url.com/r2/default/images/1788097935225-ab0482a5-3215-49ad-a6e0-195629ad2ab9.png",
+    "https://www.image2url.com/r2/default/images/1788098117610-0a2b8737-6add-4fed-86f9-b12a4fdaf8f6.png"
   ];
 
   const DELAY_KEY = "popup_delay_1h";
