@@ -340,14 +340,42 @@
         box-shadow: 0 0 10px #a855f7;
       }
 
+      @keyframes ceriabetRunningText {
+        0% {
+          transform: translateX(0);
+        }
+        100% {
+          transform: translateX(-50%);
+        }
+      }
+
       #ceriabet-title {
+        width: min(500px, 82vw);
+        overflow: hidden;
+        white-space: nowrap;
+        box-sizing: border-box;
+        padding: 5px 0 7px;
         font-weight: 900;
         font-size: 16px;
-        color: #d8b4fe;
-        letter-spacing: 2px;
-        text-shadow:
-          0 0 10px rgba(168, 85, 247, .9),
-          0 0 25px rgba(168, 85, 247, .55);
+        color: #c084fc;
+        letter-spacing: 1px;
+        text-shadow: none;
+      }
+
+      #ceriabet-title .ceriabet-running-track {
+        display: flex;
+        width: max-content;
+        animation: ceriabetRunningText 18s linear infinite;
+        will-change: transform;
+      }
+
+      #ceriabet-title .ceriabet-running-item {
+        flex: 0 0 auto;
+        padding-right: 28px;
+      }
+
+      #ceriabet-title:hover .ceriabet-running-track {
+        animation-play-state: paused;
       }
 
       .ceriabet-gif-row {
@@ -505,7 +533,7 @@
         #ceriabet-image-stage,
         #ceriabet-popup-img,
         #ceriabet-popup-img-next {
-          max-width: 94vw;
+          max-width: 88vw;
           max-height: 55vh;
         }
 
@@ -522,6 +550,16 @@
           width: 148px;
           font-size: 12px;
           padding: 11px 0;
+        }
+
+        #ceriabet-title {
+          width: 80vw;
+          font-size: 13px;
+          letter-spacing: .6px;
+        }
+
+        #ceriabet-title .ceriabet-running-track {
+          animation-duration: 16s;
         }
 
         .ceriabet-ok {
@@ -602,8 +640,11 @@
         <div id="ceriabet-dots"></div>
       </div>
 
-      <div id="ceriabet-title">
-        DIRGAHAYU INDONESIA
+      <div id="ceriabet-title" aria-label="CARI PENGALAMAN KEMENANGAN BESAR? DAFTAR DAN MAINKAN SEKARANG JUGA DI CERIABET!">
+        <div class="ceriabet-running-track">
+          <span class="ceriabet-running-item">CARI PENGALAMAN KEMENANGAN BESAR? DAFTAR DAN MAINKAN SEKARANG JUGA DI CERIABET !</span>
+          <span class="ceriabet-running-item" aria-hidden="true">CARI PENGALAMAN KEMENANGAN BESAR? DAFTAR DAN MAINKAN SEKARANG JUGA DI CERIABET !</span>
+        </div>
       </div>
 
       <div class="ceriabet-gif-row">
@@ -617,8 +658,8 @@
 
         <div class="ceriabet-gif-box">
           <img
-            src="https://www.image2url.com/r2/default/gifs/1784829809669-8e602d39-2842-4aa9-97c3-48381ca2780f.gif"
-            alt="Dirgahayu Indonesia"
+            src="https://media.tenor.com/Yd-FAxXmftkAAAAM/pg-soft-mahjong-ways.gif"
+            alt="Mahjong Ways"
           >
         </div>
 
