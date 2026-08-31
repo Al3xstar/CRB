@@ -1,6 +1,10 @@
 (function () {
     "use strict";
 
+    /* Cegah script terpasang dua kali */
+    if (window.__CERIABET_MENU_ORBIT_ACTIVE__) return;
+    window.__CERIABET_MENU_ORBIT_ACTIVE__ = true;
+
     /* =====================================================
        CONFIG
     ===================================================== */
@@ -399,9 +403,8 @@
                     ) !important;
 
                 box-shadow:
-                    0 0 4px rgba(255,255,255,.92),
-                    0 0 9px rgba(255,222,108,.78),
-                    0 0 14px rgba(255,160,0,.38) !important;
+                    0 0 4px rgba(255,255,255,.90),
+                    0 0 10px rgba(255,190,55,.52) !important;
 
                 transform:
                     translate3d(-100px,-100px,0);
@@ -1800,6 +1803,11 @@ icon.appendChild(image);
         );
 
 
+        if (document.hidden) {
+            return;
+        }
+
+
         if (
             !buildOrbitPath()
         ) {
@@ -1817,6 +1825,11 @@ icon.appendChild(image);
             ensureOrbitDot(
                 box
             );
+
+
+        const dotSize =
+            dot.offsetWidth ||
+            9;
 
 
         orbitStartedAt =
@@ -1854,11 +1867,6 @@ icon.appendChild(image);
                 orbitPath.pointAt(
                     distance
                 );
-
-
-            const dotSize =
-                dot.offsetWidth ||
-                9;
 
 
             dot.style.transform =
@@ -1921,6 +1929,20 @@ icon.appendChild(image);
         setupObserver();
 
         setupResize();
+
+
+        document.addEventListener(
+            "visibilitychange",
+            function () {
+
+                if (document.hidden) {
+                    cancelAnimationFrame(orbitFrame);
+                } else {
+                    startOrbitAnimation();
+                }
+            },
+            { passive: true }
+        );
 
 
         /*
