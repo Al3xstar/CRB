@@ -10,6 +10,8 @@
     const STYLE_ID = "ceriabet-menu-style-v2";
     const MENU_CLASS = "btn-atas";
     const BUTTON_CLASS = "ceriabet-menu-btn";
+    const ORBIT_DOT_CLASS = "ceriabet-orbit-dot";
+    const ORBIT_SPEED = 185; // px/detik, sedikit lebih cepat & tetap konstan
 
     const SELECTOR_MOBILE_TARGET = ".jackpot-play-section";
     const SELECTOR_ANNOUNCEMENT = ".announcement-outer-container";
@@ -59,6 +61,10 @@
     let resizeTimer = null;
     let observerTimer = null;
     let lastMobileState = null;
+    let orbitFrame = 0;
+    let orbitPath = null;
+    let orbitStartedAt = 0;
+    let orbitResizeTimer = null;
 
 
     /* =====================================================
@@ -357,6 +363,63 @@
             }
 
 
+
+            /* =========================================
+               CONTINUOUS ORBIT DOT
+               1 bulatan saja = ringan
+            ========================================= */
+
+            .${MENU_CLASS} .${ORBIT_DOT_CLASS} {
+                position: absolute !important;
+
+                left: 0 !important;
+                top: 0 !important;
+
+                width: 9px !important;
+                height: 9px !important;
+
+                margin: 0 !important;
+                padding: 0 !important;
+
+                border-radius: 999px !important;
+
+                pointer-events: none !important;
+
+                z-index: 30 !important;
+
+                opacity: 1;
+
+                background:
+                    radial-gradient(
+                        circle,
+                        rgba(255,255,255,1) 0%,
+                        rgba(255,248,205,.98) 34%,
+                        rgba(255,210,78,.98) 66%,
+                        rgba(255,153,0,.96) 100%
+                    ) !important;
+
+                box-shadow:
+                    0 0 4px rgba(255,255,255,.92),
+                    0 0 9px rgba(255,222,108,.78),
+                    0 0 14px rgba(255,160,0,.38) !important;
+
+                transform:
+                    translate3d(-100px,-100px,0);
+
+                will-change:
+                    transform;
+            }
+
+
+            @media (max-width: 480px) {
+
+                .${MENU_CLASS} .${ORBIT_DOT_CLASS} {
+                    width: 8px !important;
+                    height: 8px !important;
+                }
+            }
+
+
             /* =========================================
                REDUCED MOTION
             ========================================= */
@@ -365,6 +428,10 @@
 
                 .${MENU_CLASS} .${BUTTON_CLASS} {
                     transition: none !important;
+                }
+
+                .${MENU_CLASS} .${ORBIT_DOT_CLASS} {
+                    display: none !important;
                 }
             }
 
@@ -896,6 +963,8 @@ icon.appendChild(image);
 
                                 placeButtonBox();
 
+                                rebuildOrbitAnimation();
+
                             },
                             100
                         );
@@ -957,6 +1026,14 @@ icon.appendChild(image);
                                 placeButtonBox();
                             }
 
+
+                            /*
+                             * Ukuran kotak bisa berubah walau
+                             * tidak pindah breakpoint.
+                             * Rebuild path hanya setelah resize selesai.
+                             */
+                            rebuildOrbitAnimation();
+
                         },
                         150
                     );
@@ -965,6 +1042,869 @@ icon.appendChild(image);
                 passive: true
             }
         );
+    }
+
+
+
+    /* =====================================================
+       LIGHT ORBIT ENGINE
+       Jalur:
+       atas-kiri kotak 1
+       -> setengah putaran
+       -> lanjut ke kanan dengan speed sama
+       -> setengah putaran kotak berikutnya
+       -> setelah kotak terakhir balik lewat sisi yang tersisa
+       -> loop tanpa teleport
+    ===================================================== */
+
+    function ensureOrbitDot(box) {
+
+        let dot =
+            box.querySelector(
+                "." + ORBIT_DOT_CLASS
+            );
+
+
+        if (dot) {
+            return dot;
+        }
+
+
+        dot =
+            document.createElement("span");
+
+        dot.className =
+            ORBIT_DOT_CLASS;
+
+        dot.setAttribute(
+            "aria-hidden",
+            "true"
+        );
+
+
+        box.appendChild(
+            dot
+        );
+
+
+        return dot;
+    }
+
+
+    function getButtonGeometry(
+        box,
+        button
+    ) {
+
+        const boxRect =
+            box.getBoundingClientRect();
+
+        const rect =
+            button.getBoundingClientRect();
+
+        const radius =
+            parseFloat(
+                getComputedStyle(button)
+                    .borderTopLeftRadius
+            ) || 0;
+
+
+        return {
+            x:
+                rect.left -
+                boxRect.left,
+
+            y:
+                rect.top -
+                boxRect.top,
+
+            w:
+                rect.width,
+
+            h:
+                rect.height,
+
+            r:
+                Math.max(
+                    0,
+                    Math.min(
+                        radius,
+                        rect.width / 2,
+                        rect.height / 2
+                    )
+                )
+        };
+    }
+
+
+    function createOrbitBuilder() {
+
+        const segments = [];
+
+        let totalLength = 0;
+
+
+        function addLine(
+            x1,
+            y1,
+            x2,
+            y2
+        ) {
+
+            const length =
+                Math.hypot(
+                    x2 - x1,
+                    y2 - y1
+                );
+
+
+            if (length < .01) {
+                return;
+            }
+
+
+            segments.push({
+                type: 0,
+
+                x1,
+                y1,
+                x2,
+                y2,
+
+                start:
+                    totalLength,
+
+                length
+            });
+
+
+            totalLength +=
+                length;
+        }
+
+
+        function addArc(
+            cx,
+            cy,
+            r,
+            a1,
+            a2
+        ) {
+
+            const length =
+                Math.abs(
+                    a2 - a1
+                ) * r;
+
+
+            if (
+                r < .01 ||
+                length < .01
+            ) {
+
+                return;
+            }
+
+
+            segments.push({
+                type: 1,
+
+                cx,
+                cy,
+                r,
+                a1,
+                a2,
+
+                start:
+                    totalLength,
+
+                length
+            });
+
+
+            totalLength +=
+                length;
+        }
+
+
+        function pointAt(distance) {
+
+            if (
+                !segments.length ||
+                totalLength <= 0
+            ) {
+
+                return {
+                    x: 0,
+                    y: 0
+                };
+            }
+
+
+            let d =
+                distance %
+                totalLength;
+
+
+            if (d < 0) {
+
+                d +=
+                    totalLength;
+            }
+
+
+            let segment =
+                segments[0];
+
+
+            /*
+             * Segmen cuma sedikit.
+             * Linear loop lebih ringan/sederhana
+             * daripada bikin struktur tambahan.
+             */
+            for (
+                let i = 0;
+                i < segments.length;
+                i += 1
+            ) {
+
+                const candidate =
+                    segments[i];
+
+
+                if (
+                    d <=
+                    candidate.start +
+                    candidate.length
+                ) {
+
+                    segment =
+                        candidate;
+
+                    break;
+                }
+            }
+
+
+            const t =
+                Math.max(
+                    0,
+                    Math.min(
+                        1,
+                        (
+                            d -
+                            segment.start
+                        ) /
+                        segment.length
+                    )
+                );
+
+
+            if (
+                segment.type === 0
+            ) {
+
+                return {
+                    x:
+                        segment.x1 +
+                        (
+                            (
+                                segment.x2 -
+                                segment.x1
+                            ) *
+                            t
+                        ),
+
+                    y:
+                        segment.y1 +
+                        (
+                            (
+                                segment.y2 -
+                                segment.y1
+                            ) *
+                            t
+                        )
+                };
+            }
+
+
+            const angle =
+                segment.a1 +
+                (
+                    (
+                        segment.a2 -
+                        segment.a1
+                    ) *
+                    t
+                );
+
+
+            return {
+                x:
+                    segment.cx +
+                    (
+                        Math.cos(angle) *
+                        segment.r
+                    ),
+
+                y:
+                    segment.cy +
+                    (
+                        Math.sin(angle) *
+                        segment.r
+                    )
+            };
+        }
+
+
+        return {
+            addLine,
+            addArc,
+
+            finish:
+                function () {
+
+                    return {
+                        totalLength,
+                        pointAt
+                    };
+                }
+        };
+    }
+
+
+    /*
+     * MAJU A:
+     * atas-kiri -> atas -> kanan -> bawah-kanan
+     */
+    function addForwardA(
+        builder,
+        g
+    ) {
+
+        builder.addLine(
+            g.x + g.r,
+            g.y,
+
+            g.x + g.w - g.r,
+            g.y
+        );
+
+
+        builder.addArc(
+            g.x + g.w - g.r,
+            g.y + g.r,
+            g.r,
+
+            -Math.PI / 2,
+            0
+        );
+
+
+        builder.addLine(
+            g.x + g.w,
+            g.y + g.r,
+
+            g.x + g.w,
+            g.y + g.h - g.r
+        );
+
+
+        builder.addArc(
+            g.x + g.w - g.r,
+            g.y + g.h - g.r,
+            g.r,
+
+            0,
+            Math.PI / 2
+        );
+    }
+
+
+    /*
+     * MAJU B:
+     * bawah-kiri -> bawah -> kanan -> atas-kanan
+     */
+    function addForwardB(
+        builder,
+        g
+    ) {
+
+        builder.addLine(
+            g.x + g.r,
+            g.y + g.h,
+
+            g.x + g.w - g.r,
+            g.y + g.h
+        );
+
+
+        builder.addArc(
+            g.x + g.w - g.r,
+            g.y + g.h - g.r,
+            g.r,
+
+            Math.PI / 2,
+            0
+        );
+
+
+        builder.addLine(
+            g.x + g.w,
+            g.y + g.h - g.r,
+
+            g.x + g.w,
+            g.y + g.r
+        );
+
+
+        builder.addArc(
+            g.x + g.w - g.r,
+            g.y + g.r,
+            g.r,
+
+            0,
+            -Math.PI / 2
+        );
+    }
+
+
+    /*
+     * BALIK A:
+     * bawah-kanan -> bawah -> kiri -> atas-kiri
+     */
+    function addReturnA(
+        builder,
+        g
+    ) {
+
+        builder.addLine(
+            g.x + g.w - g.r,
+            g.y + g.h,
+
+            g.x + g.r,
+            g.y + g.h
+        );
+
+
+        builder.addArc(
+            g.x + g.r,
+            g.y + g.h - g.r,
+            g.r,
+
+            Math.PI / 2,
+            Math.PI
+        );
+
+
+        builder.addLine(
+            g.x,
+            g.y + g.h - g.r,
+
+            g.x,
+            g.y + g.r
+        );
+
+
+        builder.addArc(
+            g.x + g.r,
+            g.y + g.r,
+            g.r,
+
+            Math.PI,
+            Math.PI * 1.5
+        );
+    }
+
+
+    /*
+     * BALIK B:
+     * atas-kanan -> atas -> kiri -> bawah-kiri
+     */
+    function addReturnB(
+        builder,
+        g
+    ) {
+
+        builder.addLine(
+            g.x + g.w - g.r,
+            g.y,
+
+            g.x + g.r,
+            g.y
+        );
+
+
+        builder.addArc(
+            g.x + g.r,
+            g.y + g.r,
+            g.r,
+
+            Math.PI * 1.5,
+            Math.PI
+        );
+
+
+        builder.addLine(
+            g.x,
+            g.y + g.r,
+
+            g.x,
+            g.y + g.h - g.r
+        );
+
+
+        builder.addArc(
+            g.x + g.r,
+            g.y + g.h - g.r,
+            g.r,
+
+            Math.PI,
+            Math.PI / 2
+        );
+    }
+
+
+    function buildOrbitPath() {
+
+        const box =
+            document.querySelector(
+                "." + MENU_CLASS
+            );
+
+
+        if (
+            !box ||
+            !box.isConnected
+        ) {
+
+            orbitPath =
+                null;
+
+            return false;
+        }
+
+
+        const buttons =
+            Array.from(
+                box.querySelectorAll(
+                    "." + BUTTON_CLASS
+                )
+            );
+
+
+        if (!buttons.length) {
+
+            orbitPath =
+                null;
+
+            return false;
+        }
+
+
+        const geometry =
+            buttons.map(
+                function (button) {
+
+                    return getButtonGeometry(
+                        box,
+                        button
+                    );
+                }
+            );
+
+
+        const builder =
+            createOrbitBuilder();
+
+
+        /*
+         * MAJU KE KANAN.
+         * Speed connector sama karena semua
+         * dihitung sebagai panjang path.
+         */
+        for (
+            let i = 0;
+            i < geometry.length;
+            i += 1
+        ) {
+
+            const g =
+                geometry[i];
+
+
+            if (
+                i % 2 === 0
+            ) {
+
+                addForwardA(
+                    builder,
+                    g
+                );
+
+            } else {
+
+                addForwardB(
+                    builder,
+                    g
+                );
+            }
+
+
+            if (
+                i <
+                geometry.length - 1
+            ) {
+
+                const next =
+                    geometry[
+                        i + 1
+                    ];
+
+
+                if (
+                    i % 2 === 0
+                ) {
+
+                    builder.addLine(
+                        g.x +
+                        g.w -
+                        g.r,
+
+                        g.y +
+                        g.h,
+
+                        next.x +
+                        next.r,
+
+                        next.y +
+                        next.h
+                    );
+
+                } else {
+
+                    builder.addLine(
+                        g.x +
+                        g.w -
+                        g.r,
+
+                        g.y,
+
+                        next.x +
+                        next.r,
+
+                        next.y
+                    );
+                }
+            }
+        }
+
+
+        /*
+         * BALIK KE KIRI.
+         * Menggunakan sisi yang belum dilewati,
+         * jadi loop nyambung tanpa teleport.
+         */
+        for (
+            let i =
+                geometry.length - 1;
+            i >= 0;
+            i -= 1
+        ) {
+
+            const g =
+                geometry[i];
+
+
+            if (
+                i % 2 === 0
+            ) {
+
+                addReturnA(
+                    builder,
+                    g
+                );
+
+            } else {
+
+                addReturnB(
+                    builder,
+                    g
+                );
+            }
+
+
+            if (i > 0) {
+
+                const previous =
+                    geometry[
+                        i - 1
+                    ];
+
+
+                if (
+                    i % 2 === 0
+                ) {
+
+                    builder.addLine(
+                        g.x +
+                        g.r,
+
+                        g.y,
+
+                        previous.x +
+                        previous.w -
+                        previous.r,
+
+                        previous.y
+                    );
+
+                } else {
+
+                    builder.addLine(
+                        g.x +
+                        g.r,
+
+                        g.y +
+                        g.h,
+
+                        previous.x +
+                        previous.w -
+                        previous.r,
+
+                        previous.y +
+                        previous.h
+                    );
+                }
+            }
+        }
+
+
+        orbitPath =
+            builder.finish();
+
+
+        ensureOrbitDot(
+            box
+        );
+
+
+        return true;
+    }
+
+
+    function startOrbitAnimation() {
+
+        cancelAnimationFrame(
+            orbitFrame
+        );
+
+
+        if (
+            !buildOrbitPath()
+        ) {
+
+            return;
+        }
+
+
+        const box =
+            document.querySelector(
+                "." + MENU_CLASS
+            );
+
+        const dot =
+            ensureOrbitDot(
+                box
+            );
+
+
+        orbitStartedAt =
+            performance.now();
+
+
+        function frame(now) {
+
+            if (
+                !box.isConnected ||
+                !orbitPath
+            ) {
+
+                return;
+            }
+
+
+            /*
+             * Satu-satunya kerja tiap frame:
+             * hitung jarak -> transform dot.
+             * Tidak ada query DOM / layout read tiap frame.
+             */
+            const distance =
+                (
+                    (
+                        now -
+                        orbitStartedAt
+                    ) /
+                    1000
+                ) *
+                ORBIT_SPEED;
+
+
+            const point =
+                orbitPath.pointAt(
+                    distance
+                );
+
+
+            const dotSize =
+                dot.offsetWidth ||
+                9;
+
+
+            dot.style.transform =
+                "translate3d(" +
+                (
+                    point.x -
+                    (dotSize / 2)
+                ) +
+                "px," +
+                (
+                    point.y -
+                    (dotSize / 2)
+                ) +
+                "px,0)";
+
+
+            orbitFrame =
+                requestAnimationFrame(
+                    frame
+                );
+        }
+
+
+        orbitFrame =
+            requestAnimationFrame(
+                frame
+            );
+    }
+
+
+    function rebuildOrbitAnimation() {
+
+        clearTimeout(
+            orbitResizeTimer
+        );
+
+
+        orbitResizeTimer =
+            setTimeout(
+                function () {
+
+                    startOrbitAnimation();
+
+                },
+                120
+            );
     }
 
 
@@ -981,6 +1921,15 @@ icon.appendChild(image);
         setupObserver();
 
         setupResize();
+
+
+        /*
+         * Tunggu sedikit supaya layout final sudah stabil.
+         */
+        setTimeout(
+            startOrbitAnimation,
+            180
+        );
     }
 
 
