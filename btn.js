@@ -108,7 +108,7 @@
                 display: grid !important;
                 grid-template-columns: repeat(5, minmax(0, 1fr)) !important;
 
-                width: min(100%, 760px) !important;
+                width: min(calc(100% - 12px), 940px) !important;
 
                 margin: 8px auto !important;
                 padding: 7px !important;
@@ -146,7 +146,7 @@
                 justify-content: center !important;
 
                 min-width: 0 !important;
-                min-height: 78px !important;
+                min-height: 84px !important;
 
                 padding: 7px 4px 6px !important;
                 margin: 0 !important;
@@ -197,17 +197,17 @@
                 align-items: center !important;
                 justify-content: center !important;
 
-                width: 52px !important;
-                height: 52px !important;
+                width: 60px !important;
+                height: 60px !important;
 
-                flex: 0 0 52px !important;
+                flex: 0 0 60px !important;
             }
 
             .${MENU_CLASS} .ceriabet-menu-icon img {
                 display: block !important;
 
-                width: 50px !important;
-                height: 50px !important;
+                width: 58px !important;
+                height: 58px !important;
 
                 max-width: 100% !important;
 
@@ -217,39 +217,6 @@
 
                 pointer-events: none !important;
             }
-
-
-            /* =========================================
-               LABEL
-            ========================================= */
-
-            .${MENU_CLASS} .ceriabet-menu-label {
-                display: block !important;
-
-                width: 100% !important;
-
-                margin-top: 3px !important;
-
-                overflow: hidden !important;
-
-                color: rgba(255,255,255,.92) !important;
-
-                font:
-                    700 9px/1.1
-                    Arial,
-                    Helvetica,
-                    sans-serif !important;
-
-                letter-spacing: .15px !important;
-
-                text-align: center !important;
-                text-overflow: ellipsis !important;
-
-                white-space: nowrap !important;
-
-                pointer-events: none !important;
-            }
-
 
             /* =========================================
                IMAGE ERROR
@@ -328,9 +295,9 @@
             @media (max-width: 480px) {
 
                 .${MENU_CLASS} {
-                    width: calc(100% - 8px) !important;
+                    width: calc(100% - 2px) !important;
 
-                    margin: 6px 4px !important;
+                    margin: 6px 1px !important;
 
                     padding: 5px !important;
                     gap: 4px !important;
@@ -339,7 +306,7 @@
                 }
 
                 .${MENU_CLASS} .${BUTTON_CLASS} {
-                    min-height: 66px !important;
+                    min-height: 72px !important;
 
                     padding:
                         5px 2px 4px !important;
@@ -348,21 +315,15 @@
                 }
 
                 .${MENU_CLASS} .ceriabet-menu-icon {
-                    width: 42px !important;
-                    height: 42px !important;
+                    width: 48px !important;
+                    height: 48px !important;
 
-                    flex-basis: 42px !important;
+                    flex-basis: 48px !important;
                 }
 
                 .${MENU_CLASS} .ceriabet-menu-icon img {
-                    width: 41px !important;
-                    height: 41px !important;
-                }
-
-                .${MENU_CLASS} .ceriabet-menu-label {
-                    margin-top: 2px !important;
-
-                    font-size: 8px !important;
+                    width: 47px !important;
+                    height: 47px !important;
                 }
             }
 
@@ -379,7 +340,7 @@
                 }
 
                 .${MENU_CLASS} .${BUTTON_CLASS} {
-                    min-height: 60px !important;
+                    min-height: 66px !important;
                 }
 
                 .${MENU_CLASS} .ceriabet-menu-icon {
@@ -392,10 +353,6 @@
                 .${MENU_CLASS} .ceriabet-menu-icon img {
                     width: 36px !important;
                     height: 36px !important;
-                }
-
-                .${MENU_CLASS} .ceriabet-menu-label {
-                    font-size: 7px !important;
                 }
             }
 
@@ -532,22 +489,9 @@
                     once: true
                 }
             );
-
-
-            const label =
-                document.createElement("span");
-
-            label.className =
-                "ceriabet-menu-label";
-
-            label.textContent =
-                item.shortName;
-
-
-            icon.appendChild(image);
+icon.appendChild(image);
 
             link.appendChild(icon);
-            link.appendChild(label);
 
             fragment.appendChild(link);
         });
