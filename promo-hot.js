@@ -1,58 +1,25 @@
 (function () {
     "use strict";
 
-    const STYLE_ID = "ceriabet-promo-hot-shine-style";
-
-    if (document.getElementById(STYLE_ID)) return;
+    const STYLE_ID = "promo-shine-sync-v3";
+    const IMAGE_LAYER = "promo-image-shine-layer";
+    const TAKE_BUTTON = "promo-take-button";
+    const SYNC_CLASS = "promo-shine-running";
 
     const HOT_ICON =
         "https://dsuown9evwz4y.cloudfront.net/Images/icons/floating-icon/1.png?v=20250528";
 
-    /* =========================================
-       BUTTON YANG DIBERI EFEK HOT + KILAP
-       ========================================= */
-    const selectors = [
-        'a[href^="/desktop/bonus#"]',
-        'a[href^="/mobile/bonus#"]',
-
-        'a[href^="/desktop/cashback#"]',
-        'a[href^="/mobile/cashback#"]',
-
-        'a[href^="/desktop/commission#"]',
-        'a[href^="/mobile/commission#"]'
-    ];
-
-    const TARGETS = selectors.join(",");
-
-    const TARGETS_BEFORE = selectors
-        .map(selector => selector + "::before")
-        .join(",");
-
-    const TARGETS_AFTER = selectors
-        .map(selector => selector + "::after")
-        .join(",");
-
 
     /* =========================================
-       BUAT WRAPPER OTOMATIS UNTUK GAMBAR PROMO
+       BERSIHKAN VERSI SEBELUMNYA
        ========================================= */
 
-    function wrapPromoImages() {
-        const images = document.querySelectorAll(
-            ".promotion-list .promotion-item > img:not([data-shine-ready])"
-        );
+    document.getElementById(STYLE_ID)?.remove();
 
-        images.forEach(img => {
-            img.setAttribute("data-shine-ready", "1");
+    document
+        .querySelectorAll("." + IMAGE_LAYER)
+        .forEach(el => el.remove());
 
-            const wrapper = document.createElement("div");
-
-            wrapper.className = "promotion-image-shine";
-
-            img.parentNode.insertBefore(wrapper, img);
-            wrapper.appendChild(img);
-        });
-    }
 
 
     /* =========================================
@@ -62,68 +29,87 @@
     const style = document.createElement("style");
 
     style.id = STYLE_ID;
-    style.setAttribute("data-promo-hot", "1");
 
     style.textContent = `
 
-        /* =====================================
-           BUTTON
-           ===================================== */
+        .promotion-list .promotion-item {
+            position: relative !important;
+        }
 
-        ${TARGETS} {
+
+        /* ==================================================
+           TOMBOL AMBIL PROMO SAJA
+           ================================================== */
+
+        .${TAKE_BUTTON} {
             position: relative !important;
             overflow: visible !important;
             isolation: isolate;
         }
 
 
-        /* =====================================
-           KILAP BUTTON
-           ===================================== */
+        /* KILAP BUTTON */
 
-        ${TARGETS_BEFORE} {
+        .${TAKE_BUTTON}.${SYNC_CLASS}::before {
             content: "";
-            position: absolute;
 
+            position: absolute;
             inset: 0;
 
             border-radius: inherit;
-
-            background-image:
-                linear-gradient(
-                    105deg,
-                    transparent 0%,
-                    transparent 39%,
-                    rgba(255,255,255,.05) 44%,
-                    rgba(255,255,255,.22) 49%,
-                    rgba(255,248,220,.38) 51%,
-                    rgba(255,255,255,.16) 54%,
-                    transparent 61%,
-                    transparent 100%
-                );
-
-            background-size: 260% 100%;
-            background-repeat: no-repeat;
-
-            background-position: 140% 0;
 
             pointer-events: none;
 
             z-index: 2;
 
+            overflow: hidden;
+
+            clip-path:
+                inset(0 round 999px);
+
+            background:
+                linear-gradient(
+                    105deg,
+
+                    transparent 0%,
+                    transparent 39%,
+
+                    rgba(255,255,255,.05) 44%,
+
+                    rgba(255,255,255,.22) 49%,
+
+                    rgba(255,248,220,.38) 51%,
+
+                    rgba(255,255,255,.16) 54%,
+
+                    transparent 61%,
+                    transparent 100%
+                );
+
+            background-size:
+                260% 100%;
+
+            background-repeat:
+                no-repeat;
+
+            background-position:
+                140% 0;
+
+            /*
+             * PERSIS SAMA:
+             * 4.2 detik
+             * ease-in-out
+             * infinite
+             */
             animation:
-                ceriabetPromoShineInside
+                promoButtonSyncShine
                 4.2s
                 ease-in-out
                 infinite;
-
-            overflow: hidden;
-
-            clip-path: inset(0 round 999px);
         }
 
 
-        @keyframes ceriabetPromoShineInside {
+        @keyframes promoButtonSyncShine {
 
             0% {
                 background-position: 140% 0;
@@ -151,11 +137,12 @@
 
 
 
-        /* =====================================
-           ICON HOT BUTTON
-           ===================================== */
+        /* ==================================================
+           HOT ICON
+           HANYA AMBIL PROMO
+           ================================================== */
 
-        ${TARGETS_AFTER} {
+        .${TAKE_BUTTON}::after {
             content: "";
 
             position: absolute;
@@ -168,199 +155,191 @@
 
             background:
                 url("${HOT_ICON}")
-                no-repeat
-                center / contain;
+                center / contain
+                no-repeat;
 
             pointer-events: none;
 
-            z-index: 10;
-
-            animation:
-                ceriabetHotBlink
-                1.6s
-                ease-in-out
-                infinite;
+            z-index: 30;
 
             transform-origin: center;
 
-            will-change:
-                opacity,
-                filter,
-                transform;
+            animation:
+                promoHotBlink
+                1.6s
+                ease-in-out
+                infinite;
         }
 
 
-        @keyframes ceriabetHotBlink {
+        @keyframes promoHotBlink {
 
             0%,
             100% {
                 opacity: 1;
-                filter: brightness(1);
-                transform: scale(1);
+
+                filter:
+                    brightness(1);
+
+                transform:
+                    scale(1);
             }
 
             50% {
                 opacity: .48;
-                filter: brightness(1.35);
-                transform: scale(.96);
+
+                filter:
+                    brightness(1.35);
+
+                transform:
+                    scale(.96);
             }
         }
 
 
 
-        /* =====================================
-           GAMBAR PROMO
-           ===================================== */
+        /* ==================================================
+           LAYER KILAP GAMBAR
+           ================================================== */
 
-        .promotion-image-shine {
-            position: relative;
+        .${IMAGE_LAYER} {
+            position: absolute !important;
 
-            display: block;
+            overflow: hidden !important;
 
-            width: 100%;
+            pointer-events: none !important;
 
-            overflow: hidden;
+            z-index: 20 !important;
 
-            /*
-             * Mengikuti bentuk sudut gambar promo.
-             * Kalau gambar kamu kotak, bisa ubah ke 0.
-             */
-            border-radius: 8px;
+            margin: 0 !important;
+            padding: 0 !important;
+
+            box-sizing: border-box !important;
+
+            transform: translateZ(0);
 
             isolation: isolate;
         }
 
 
-        .promotion-image-shine > img {
-            display: block;
 
-            width: 100%;
-            height: auto;
+        /* ==================================================
+           CAHAYA GAMBAR
+           ================================================== */
 
-            position: relative;
-
-            z-index: 1;
-        }
-
-
-
-        /* =====================================
-           KILAP DI ATAS GAMBAR
-           ===================================== */
-
-        .promotion-image-shine::after {
+        .${IMAGE_LAYER}.${SYNC_CLASS}::before {
             content: "";
 
             position: absolute;
 
-            inset: 0;
+            top: -45%;
 
-            z-index: 5;
+            left: -50%;
+
+            width: 32%;
+
+            height: 190%;
 
             pointer-events: none;
 
-            /*
-             * Kilap dibuat lebih lebar dan terang
-             * supaya terlihat pada banner.
-             */
             background:
                 linear-gradient(
-                    110deg,
+                    90deg,
 
-                    transparent 0%,
-                    transparent 32%,
+                    rgba(255,255,255,0) 0%,
 
-                    rgba(255,255,255,0.00) 38%,
+                    rgba(255,255,255,.03) 15%,
 
-                    rgba(255,255,255,0.10) 42%,
-                    rgba(255,255,255,0.28) 46%,
-                    rgba(255,255,255,0.65) 49%,
+                    rgba(255,255,255,.15) 30%,
 
-                    rgba(255,248,215,0.85) 50%,
+                    rgba(255,255,255,.48) 43%,
 
-                    rgba(255,255,255,0.65) 51%,
-                    rgba(255,255,255,0.28) 54%,
-                    rgba(255,255,255,0.10) 58%,
+                    rgba(255,248,220,.78) 50%,
 
-                    transparent 64%,
-                    transparent 100%
+                    rgba(255,255,255,.55) 56%,
+
+                    rgba(255,255,255,.18) 70%,
+
+                    rgba(255,255,255,0) 100%
                 );
 
-            background-size: 300% 100%;
+            box-shadow:
+                0 0 20px rgba(255,255,255,.25),
+                0 0 40px rgba(255,245,210,.18);
 
-            background-position: 150% 0;
-
-            background-repeat: no-repeat;
-
-            mix-blend-mode: screen;
-
-            animation:
-                ceriabetImageShine
-                4.8s
-                ease-in-out
-                infinite;
+            filter:
+                blur(1px);
 
             will-change:
-                background-position,
+                transform,
                 opacity;
+
+            /*
+             * SAMA PERSIS DENGAN AMBIL PROMO
+             */
+            animation:
+                promoImageSyncShine
+                4.2s
+                ease-in-out
+                infinite;
         }
 
 
-        @keyframes ceriabetImageShine {
+
+        /*
+         * TIMING SAMA:
+         *
+         * 0%
+         * 8%
+         * 48%
+         * 58%
+         * 100%
+         */
+
+        @keyframes promoImageSyncShine {
 
             0% {
-                background-position: 150% 0;
+                transform:
+                    skewX(-22deg)
+                    translateX(-260%);
+
                 opacity: 0;
             }
 
-            7% {
+            8% {
                 opacity: 1;
             }
 
-            45% {
+            48% {
                 opacity: 1;
             }
 
-            57% {
-                background-position: -150% 0;
+            58% {
+                transform:
+                    skewX(-22deg)
+                    translateX(650%);
+
                 opacity: 0;
             }
 
             100% {
-                background-position: -150% 0;
+                transform:
+                    skewX(-22deg)
+                    translateX(650%);
+
                 opacity: 0;
             }
         }
 
 
 
-        /* =====================================
-           OVERFLOW MENU
-           ===================================== */
-
-        .promotion-sidebar,
-        .promotion-filter,
-        .promotion-menu {
-            overflow: visible !important;
-        }
-
-
-        .promotion-sidebar a,
-        .promotion-filter a,
-        .promotion-menu a {
-            position: relative;
-            z-index: 3;
-        }
-
-
-
-        /* =====================================
+        /* ==================================================
            MOBILE
-           ===================================== */
+           ================================================== */
 
         @media (max-width: 768px) {
 
-            ${TARGETS_AFTER} {
+            .${TAKE_BUTTON}::after {
                 width: 26px;
                 height: 26px;
 
@@ -368,34 +347,8 @@
                 right: -11px;
             }
 
-
-            .promotion-image-shine::after {
-                background-size: 340% 100%;
-
-                animation-duration: 5.2s;
-            }
-        }
-
-
-
-        /* =====================================
-           REDUCE MOTION
-           ===================================== */
-
-        @media (prefers-reduced-motion: reduce) {
-
-            ${TARGETS_BEFORE} {
-                animation: none;
-                background-image: none;
-            }
-
-            ${TARGETS_AFTER} {
-                animation: none;
-            }
-
-            .promotion-image-shine::after {
-                animation: none;
-                display: none;
+            .${IMAGE_LAYER}::before {
+                width: 36%;
             }
         }
 
@@ -404,28 +357,426 @@
     document.head.appendChild(style);
 
 
-    /* =========================================
-       JALANKAN PERTAMA KALI
-       ========================================= */
-
-    wrapPromoImages();
-
 
     /* =========================================
-       DETEKSI PROMO YANG LOAD BELAKANGAN
-       =========================================
-       Penting kalau website menggunakan React/Vue,
-       AJAX, atau promo muncul setelah halaman load.
+       CARI TOMBOL AMBIL PROMO
        ========================================= */
 
-    const observer = new MutationObserver(() => {
-        wrapPromoImages();
-    });
+    function findTakeButtons() {
+
+        document
+            .querySelectorAll(
+                ".promotion-list .promotion-item a, " +
+                ".promotion-list .promotion-item button"
+            )
+            .forEach(button => {
+
+                const text =
+                    button.textContent
+                        .trim()
+                        .replace(/\\s+/g, " ")
+                        .toUpperCase();
 
 
-    observer.observe(document.body, {
-        childList: true,
-        subtree: true
-    });
+                /*
+                 * HANYA AMBIL PROMO
+                 */
+
+                if (
+                    text.includes("AMBIL PROMO")
+                ) {
+
+                    button.classList.add(
+                        TAKE_BUTTON
+                    );
+
+                } else {
+
+                    /*
+                     * DETAIL dan button lain
+                     * dipastikan TIDAK punya kilap.
+                     */
+
+                    button.classList.remove(
+                        TAKE_BUTTON,
+                        SYNC_CLASS
+                    );
+                }
+
+            });
+    }
+
+
+
+    /* =========================================
+       CARI GAMBAR UTAMA
+       ========================================= */
+
+    function getMainImage(item) {
+
+        /*
+         * Prioritas pertama:
+         * IMG langsung di dalam promotion-item.
+         */
+
+        const direct =
+            Array.from(item.children)
+                .find(el =>
+                    el.tagName === "IMG"
+                );
+
+        if (direct) {
+            return direct;
+        }
+
+
+        /*
+         * Fallback:
+         * cari image terbesar.
+         */
+
+        const images =
+            Array.from(
+                item.querySelectorAll("img")
+            );
+
+
+        if (!images.length) {
+            return null;
+        }
+
+
+        let biggest =
+            images[0];
+
+        let biggestArea =
+            0;
+
+
+        images.forEach(img => {
+
+            const w =
+                img.offsetWidth ||
+                img.naturalWidth ||
+                0;
+
+            const h =
+                img.offsetHeight ||
+                img.naturalHeight ||
+                0;
+
+            const area =
+                w * h;
+
+
+            if (area > biggestArea) {
+
+                biggestArea =
+                    area;
+
+                biggest =
+                    img;
+            }
+
+        });
+
+
+        return biggest;
+    }
+
+
+
+    /* =========================================
+       BUAT LAYER GAMBAR
+       ========================================= */
+
+    function createImageLayers() {
+
+        document
+            .querySelectorAll(
+                ".promotion-list .promotion-item"
+            )
+            .forEach(item => {
+
+                const img =
+                    getMainImage(item);
+
+
+                if (!img) return;
+
+
+                let layer =
+                    Array.from(item.children)
+                        .find(el =>
+                            el.classList?.contains(
+                                IMAGE_LAYER
+                            )
+                        );
+
+
+                if (!layer) {
+
+                    layer =
+                        document.createElement(
+                            "span"
+                        );
+
+                    layer.className =
+                        IMAGE_LAYER;
+
+                    item.appendChild(
+                        layer
+                    );
+                }
+
+
+                /*
+                 * Ikuti posisi gambar REAL.
+                 */
+
+                layer.style.left =
+                    img.offsetLeft +
+                    "px";
+
+                layer.style.top =
+                    img.offsetTop +
+                    "px";
+
+                layer.style.width =
+                    img.offsetWidth +
+                    "px";
+
+                layer.style.height =
+                    img.offsetHeight +
+                    "px";
+
+
+                /*
+                 * Border radius gambar.
+                 */
+
+                const cs =
+                    getComputedStyle(img);
+
+                layer.style.borderRadius =
+                    cs.borderRadius;
+
+            });
+    }
+
+
+
+    /* =========================================
+       SINKRONISASI ANIMASI
+       ========================================= */
+
+    let syncTimer = null;
+
+
+    function synchronizeAnimations() {
+
+        clearTimeout(
+            syncTimer
+        );
+
+
+        syncTimer =
+            setTimeout(() => {
+
+                const elements =
+                    document.querySelectorAll(
+                        "." + TAKE_BUTTON +
+                        ", ." + IMAGE_LAYER
+                    );
+
+
+                /*
+                 * MATIKAN SEMUA DULU
+                 */
+
+                elements.forEach(el => {
+
+                    el.classList.remove(
+                        SYNC_CLASS
+                    );
+
+                });
+
+
+                /*
+                 * Paksa browser render ulang.
+                 */
+
+                void document.body.offsetWidth;
+
+
+                /*
+                 * HIDUPKAN SEMUA
+                 * DALAM FRAME YANG SAMA.
+                 *
+                 * Jadi gambar + AMBIL PROMO
+                 * mulai kilap bersamaan.
+                 */
+
+                requestAnimationFrame(() => {
+
+                    elements.forEach(el => {
+
+                        el.classList.add(
+                            SYNC_CLASS
+                        );
+
+                    });
+
+                });
+
+
+            }, 30);
+    }
+
+
+
+    /* =========================================
+       UPDATE SEMUA
+       ========================================= */
+
+    function updateEverything(
+        restartAnimation = false
+    ) {
+
+        findTakeButtons();
+
+        createImageLayers();
+
+
+        if (restartAnimation) {
+
+            synchronizeAnimations();
+
+        }
+
+    }
+
+
+
+    /* =========================================
+       LOAD GAMBAR
+       ========================================= */
+
+    function bindImageLoad() {
+
+        document
+            .querySelectorAll(
+                ".promotion-list img"
+            )
+            .forEach(img => {
+
+                if (
+                    img.dataset
+                        .shineLoadBound
+                ) {
+                    return;
+                }
+
+
+                img.dataset
+                    .shineLoadBound =
+                    "1";
+
+
+                img.addEventListener(
+                    "load",
+                    () => {
+
+                        createImageLayers();
+
+                        synchronizeAnimations();
+
+                    }
+                );
+
+            });
+
+    }
+
+
+
+    /* =========================================
+       RESIZE
+       ========================================= */
+
+    window.addEventListener(
+        "resize",
+        () => {
+
+            createImageLayers();
+
+        }
+    );
+
+
+
+    /* =========================================
+       WEBSITE DINAMIS
+       ========================================= */
+
+    let mutationTimer = null;
+
+
+    const observer =
+        new MutationObserver(() => {
+
+            clearTimeout(
+                mutationTimer
+            );
+
+
+            mutationTimer =
+                setTimeout(() => {
+
+                    bindImageLoad();
+
+                    updateEverything(
+                        true
+                    );
+
+                }, 80);
+
+        });
+
+
+    observer.observe(
+        document.body,
+        {
+            childList: true,
+            subtree: true
+        }
+    );
+
+
+
+    /* =========================================
+       START
+       ========================================= */
+
+    bindImageLoad();
+
+    updateEverything(
+        true
+    );
+
+
+    window.addEventListener(
+        "load",
+        () => {
+
+            bindImageLoad();
+
+            updateEverything(
+                true
+            );
+
+        }
+    );
 
 })();
