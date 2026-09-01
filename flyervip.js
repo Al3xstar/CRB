@@ -2,7 +2,7 @@
     "use strict";
 
     const BTN_ID = "partner-neon-double-orbit-btn";
-    const STYLE_ID = "partner-neon-double-orbit-style";
+    const STYLE_ID = "partner-neon-double-orbit-style"; 
     const LINK = "https://ceriavpn.online/vipcrb";
     const LOGO = "https://www.image2url.com/r2/default/gifs/1788240147275-3cd880c6-2c6d-4d20-93dc-e1da731d0395.gif";
 
@@ -10,12 +10,13 @@
     const BOTTOM = 156;
     const SIZE = 50;
 
+    // Floating hanya muncul di page /LoggedIn
     function allowed() {
         const p = location.pathname
             .replace(/\/+$/, "")
             .toLowerCase();
 
-        return p === "" || p === "/" || p.includes("home");
+        return p === "/loggedin";
     }
 
     function injectStyle() {
@@ -54,6 +55,7 @@
                 position: absolute;
                 inset: 0;
                 border-radius: 50%;
+
                 background: conic-gradient(
                     from 0deg,
                     transparent 0deg,
@@ -160,6 +162,7 @@
     }
 
     function init() {
+        if (!allowed()) return;
         injectStyle();
         createButton();
     }
