@@ -10,15 +10,13 @@
     const BOTTOM = 156;
     const SIZE = 50;
 
-    // Floating hanya muncul di page /LoggedIn
-    function allowed() {
-        const p = location.pathname
-            .replace(/\/+$/, "")
-            .toLowerCase();
+function allowed() {
+    const p = location.pathname
+        .replace(/\/+$/, "")
+        .toLowerCase();
 
-        return p === "/loggedin";
-    }
-
+    return p.includes("loggedin");
+}
     function injectStyle() {
         if (!allowed()) return;
         if (document.getElementById(STYLE_ID)) return;
