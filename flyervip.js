@@ -7,7 +7,7 @@
     const LOGO = "https://www.image2url.com/r2/default/gifs/1788240147275-3cd880c6-2c6d-4d20-93dc-e1da731d0395.gif";
 
     const RIGHT = 15;
-    const BOTTOM = 96;
+    const BOTTOM = 156;
     const SIZE = 50;
 
     function allowed() {
@@ -40,7 +40,6 @@
                 isolation: isolate;
             }
 
-            /* Dua area neon ungu yang berlawanan kiri-kanan lalu muter bareng */
             #${BTN_ID} .neon-orbit {
                 position: absolute;
                 inset: -6px;
@@ -58,51 +57,41 @@
                 background: conic-gradient(
                     from 0deg,
                     transparent 0deg,
-                    rgba(126, 35, 255, 0.10) 6deg,
-                    rgba(170, 92, 255, 0.85) 18deg,
+                    rgba(126,35,255,.10) 6deg,
+                    rgba(170,92,255,.85) 18deg,
                     #f1ddff 28deg,
                     #b65cff 38deg,
-                    rgba(126, 35, 255, 0.35) 50deg,
+                    rgba(126,35,255,.35) 50deg,
                     transparent 64deg,
 
-                    transparent 116deg,
+                    transparent 180deg,
 
-                    rgba(126, 35, 255, 0.10) 186deg,
-                    rgba(170, 92, 255, 0.85) 198deg,
+                    rgba(126,35,255,.10) 186deg,
+                    rgba(170,92,255,.85) 198deg,
                     #f1ddff 208deg,
                     #b65cff 218deg,
-                    rgba(126, 35, 255, 0.35) 230deg,
+                    rgba(126,35,255,.35) 230deg,
                     transparent 244deg,
 
                     transparent 360deg
                 );
+
                 -webkit-mask: radial-gradient(
                     farthest-side,
                     transparent calc(100% - 4px),
                     #000 calc(100% - 3px)
                 );
+
                 mask: radial-gradient(
                     farthest-side,
                     transparent calc(100% - 4px),
                     #000 calc(100% - 3px)
                 );
-                filter:
-                    drop-shadow(0 0 3px rgba(194, 112, 255, 1))
-                    drop-shadow(0 0 7px rgba(145, 52, 255, 0.95))
-                    drop-shadow(0 0 12px rgba(116, 22, 255, 0.78));
-            }
 
-            /* border tipis statis biar ring tetap terlihat */
-            #${BTN_ID} .neon-border {
-                position: absolute;
-                inset: -3px;
-                border-radius: 50%;
-                border: 1px solid rgba(158, 77, 255, 0.45);
-                box-shadow:
-                    0 0 5px rgba(160, 75, 255, 0.35),
-                    inset 0 0 4px rgba(180, 110, 255, 0.18);
-                z-index: 0;
-                pointer-events: none;
+                filter:
+                    drop-shadow(0 0 3px rgba(194,112,255,1))
+                    drop-shadow(0 0 7px rgba(145,52,255,.95))
+                    drop-shadow(0 0 12px rgba(116,22,255,.78));
             }
 
             #${BTN_ID} img {
@@ -130,7 +119,7 @@
                 justify-content: center;
                 border-radius: 50%;
                 border: 2px solid #fff;
-                box-shadow: 0 0 4px rgba(255, 0, 51, 0.7);
+                box-shadow: 0 0 4px rgba(255,0,51,.7);
                 z-index: 5;
                 pointer-events: none;
             }
@@ -163,7 +152,6 @@
 
         btn.innerHTML = `
             <span class="neon-orbit"></span>
-            <span class="neon-border"></span>
             <img src="${LOGO}" alt="Partner VIP">
             <span class="partner-badge">1</span>
         `;
