@@ -2,7 +2,7 @@
 
 (function () {
   const EXTRA_LINK = "https://www.ceriabetsbobet.com";
-  const INSTALL_LINK = "https://aplikasi.ceriabetsbo.com/direct-install";
+  const INSTALL_LINK = "https://aplikasi.ceriabetsbo.com";
 
   const IMG = [
     "https://www.image2url.com/r2/default/images/1788097990438-2047cc2f-6da2-4728-8cb4-325b7b151283.png",
