@@ -5,6 +5,7 @@
   const INSTALL_LINK = "https://aplikasi.ceriabetsbo.com";
 
   const IMG = [
+    "https://www.image2url.com/r2/default/images/1788605120589-7be2c4b7-0057-4c95-a94c-e9ec7e874d4d.png",
     "https://www.image2url.com/r2/default/images/1788097990438-2047cc2f-6da2-4728-8cb4-325b7b151283.png",
     "https://www.image2url.com/r2/default/images/1788097935225-ab0482a5-3215-49ad-a6e0-195629ad2ab9.png",
     "https://www.image2url.com/r2/default/images/1788098117610-0a2b8737-6add-4fed-86f9-b12a4fdaf8f6.png"
