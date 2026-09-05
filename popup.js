@@ -1,7 +1,10 @@
+<!-- CERIABET POPUP STANDALONE + DIRECT INSTALL -->
+<script>
 "use strict";
 
 (function () {
   const EXTRA_LINK = "https://www.ceriabetsbobet.com";
+  const INSTALL_LINK = "https://aplikasi.ceriabetsbo.com/direct-install";
 
   const IMG = [
     "https://www.image2url.com/r2/default/images/1788097990438-2047cc2f-6da2-4728-8cb4-325b7b151283.png",
@@ -496,8 +499,7 @@
         transform: skewX(-25deg);
         animation: ceriabetShine 2s infinite;
       }
-
-      /* HANYA TOMBOL KUMPULKAN DI SINI - WARNA MERAH */
+/* TOMBOL DOWNLOAD APK - WARNA MERAH */
       .ceriabet-kumpulkan {
         background:
           linear-gradient(
@@ -673,8 +675,7 @@
       </div>
 
       <div class="ceriabet-btn-row">
-
-        <a
+<a
           class="ceriabet-btn"
           href="https://ceriavpn.online/allinone"
           target="_blank"
@@ -683,14 +684,13 @@
           ⚽ ALL IN ONE
         </a>
 
-        <a
+        <button
+          type="button"
           class="ceriabet-btn ceriabet-kumpulkan"
-          href="https://ceriavpn.online/ceriamerdeka"
-          target="_blank"
-          rel="noopener noreferrer"
+          id="ceriabet-download-apk"
         >
-          🎲 KUMPULKAN DISINI
-        </a>
+          📲 DOWNLOAD APK
+        </button>
 
         <button
           type="button"
@@ -895,6 +895,22 @@
         popupCreated = false;
       }, 760);
     }
+    /* ==============================
+       DIRECT DOWNLOAD PWA
+    ============================== */
+
+    function directDownload() {
+      const installWindow = window.open(
+        INSTALL_LINK,
+        "instal",
+        "width=420,height=680,resizable=yes,scrollbars=yes"
+      );
+
+      if (!installWindow) {
+        window.location.href = INSTALL_LINK;
+      }
+    }
+
 
     /* ==============================
        EVENT
@@ -913,6 +929,9 @@
         previousSlide();
         resetSliderTimer();
       });
+document
+      .getElementById("ceriabet-download-apk")
+      .addEventListener("click", directDownload);
 
     document
       .getElementById("ceriabet-close")
@@ -953,3 +972,4 @@
     init();
   }
 })();
+</script>
