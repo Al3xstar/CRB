@@ -1,5 +1,3 @@
-<!-- CERIABET POPUP STANDALONE + DIRECT INSTALL -->
-<script>
 "use strict";
 
 (function () {
@@ -972,4 +970,3 @@ document
     init();
   }
 })();
-</script>
